@@ -1,0 +1,17 @@
+{
+  "permissions": {
+    "allow": [
+      "Read(C:\\Projects\\portfolio\\ai-chatbot/**)",
+      "Read(C:\\Projects\\portfolio\\ai-chatbot/**)",
+      "Read(C:\\Projects\\portfolio\\text-summarizer/**)",
+      "Read(C:\\Projects\\portfolio\\text-summarizer/**)",
+      "Bash(npm install:*)",
+      "Bash(curl:*)",
+      "Bash(git init:*)",
+      "Bash(git remote add:*)",
+      "Bash(git add:*)"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}

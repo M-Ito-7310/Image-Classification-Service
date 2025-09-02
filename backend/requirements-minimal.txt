@@ -1,0 +1,18 @@
+# 最小限の依存関係でテスト起動
+fastapi==0.115.4
+uvicorn[standard]==0.32.0
+python-multipart==0.0.12
+python-dotenv==1.0.1
+pydantic==2.10.2
+pydantic-settings==2.6.1
+
+# Image Processing (基本)
+pillow==11.0.0
+numpy==1.26.4
+
+# HTTP Client
+httpx==0.28.0
+aiofiles==24.1.0
+
+# System monitoring
+psutil==6.1.0

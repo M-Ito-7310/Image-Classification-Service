@@ -1,0 +1,1 @@
+export { default as HowToGuide } from './HowToGuide.vue'
