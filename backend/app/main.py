@@ -9,6 +9,9 @@ from pathlib import Path
 from app.core.config import settings
 from app.api.routes import classification, health, history, models
 from app.routers import auth
+from app.services.cache_service import cache_service
+from app.core.database_indexes import optimize_database
+from app.middleware.security import RateLimitMiddleware, SecurityHeadersMiddleware, RequestValidationMiddleware
 
 # Ensure upload directory exists
 UPLOAD_DIR = Path("uploads")
@@ -20,12 +23,35 @@ async def lifespan(app: FastAPI):
     print("Starting Image Classification Service...")
     print(f"Upload directory: {UPLOAD_DIR.absolute()}")
     
+    # Initialize database optimization
+    try:
+        print("Optimizing database indexes...")
+        optimize_database()
+        print("Database optimization completed")
+    except Exception as e:
+        print(f"Database optimization warning: {e}")
+    
+    # Initialize cache service
+    try:
+        print("Connecting to Redis cache...")
+        await cache_service.connect()
+        print("Cache service initialized")
+    except Exception as e:
+        print(f"Cache service warning: {e}")
+    
     # Initialize ML models here if needed
     
     yield
     
     # Shutdown
     print("Shutting down Image Classification Service...")
+    
+    # Cleanup cache connection
+    try:
+        await cache_service.disconnect()
+        print("Cache service disconnected")
+    except Exception as e:
+        print(f"Cache disconnect warning: {e}")
 
 # Create FastAPI application
 app = FastAPI(
@@ -36,6 +62,11 @@ app = FastAPI(
     docs_url="/docs",
     redoc_url="/redoc"
 )
+
+# Add security middleware
+app.add_middleware(SecurityHeadersMiddleware)
+app.add_middleware(RequestValidationMiddleware)
+app.add_middleware(RateLimitMiddleware, calls_per_minute=60, calls_per_hour=1000)
 
 # Configure CORS
 app.add_middleware(

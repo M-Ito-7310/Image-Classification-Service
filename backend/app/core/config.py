@@ -27,6 +27,15 @@ class Settings(BaseSettings):
         env="DATABASE_URL"
     )
     
+    # Redis Cache Settings
+    REDIS_URL: str = Field(
+        default="redis://localhost:6379/0",
+        env="REDIS_URL"
+    )
+    REDIS_PASSWORD: str = Field(default="", env="REDIS_PASSWORD")
+    CACHE_TTL: int = Field(default=300, env="CACHE_TTL")  # 5 minutes default
+    CACHE_ENABLED: bool = Field(default=True, env="CACHE_ENABLED")
+    
     # AI/ML Settings
     GOOGLE_CLOUD_PROJECT: str = Field(default="", env="GOOGLE_CLOUD_PROJECT")
     GOOGLE_CLOUD_CREDENTIALS: str = Field(default="", env="GOOGLE_CLOUD_CREDENTIALS")

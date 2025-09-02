@@ -15,6 +15,7 @@ from app.models.user import User, ClassificationRecord
 from app.routers.auth import get_current_user
 from app.services.image_service import ImageService
 from app.services.classification_service import ClassificationService
+from app.services.security_service import security_service
 from app.schemas.classification import (
     ClassificationResponse,
     ClassificationRequest,
@@ -43,26 +44,37 @@ async def classify_image(
         Classification results with confidence scores
     """
     try:
-        # Validate file
-        if not file.content_type.startswith('image/'):
-            raise HTTPException(
-                status_code=400,
-                detail="File must be an image"
-            )
-        
-        # Check file size
-        file_size = 0
+        # Read file content for validation
         content = await file.read()
-        file_size = len(content)
         
-        if file_size > settings.MAX_FILE_SIZE:
+        # Comprehensive security validation
+        validation_result = await security_service.validate_file_upload(
+            content, 
+            file.filename or "unknown.jpg"
+        )
+        
+        if not validation_result["valid"]:
+            # Log security incident
+            logger.warning(f"File upload blocked: {file.filename} - Errors: {validation_result['errors']}")
+            
+            # Quarantine suspicious files
+            if validation_result["security_score"] < 30:
+                await security_service.quarantine_suspicious_file(
+                    content, 
+                    file.filename or "unknown.jpg",
+                    validation_result
+                )
+            
             raise HTTPException(
                 status_code=400,
-                detail=f"File size {file_size} exceeds maximum allowed size {settings.MAX_FILE_SIZE}"
+                detail=f"File validation failed: {'; '.join(validation_result['errors'])}"
             )
         
-        # Reset file pointer
-        await file.seek(0)
+        # Log warnings for monitoring
+        if validation_result["warnings"]:
+            logger.warning(f"File upload warnings for {file.filename}: {validation_result['warnings']}")
+        
+        file_size = len(content)
         
         # Generate unique filename
         file_id = str(uuid.uuid4())

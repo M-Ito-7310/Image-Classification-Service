@@ -1,5 +1,6 @@
 import asyncio
 import time
+import hashlib
 from typing import Dict, List, Any, Optional
 import numpy as np
 from pathlib import Path
@@ -31,6 +32,7 @@ except ImportError:
 
 from app.core.config import settings
 from app.models.user import CustomModel
+from app.services.cache_service import cache_service
 from sqlalchemy.orm import Session
 
 class ClassificationService:
@@ -163,15 +165,17 @@ class ClassificationService:
         self,
         image: np.ndarray,
         model_name: Optional[str] = None,
-        confidence_threshold: Optional[float] = None
+        confidence_threshold: Optional[float] = None,
+        use_cache: bool = True
     ) -> Dict[str, Any]:
         """
-        Classify an image using the specified model.
+        Classify an image using the specified model with caching support.
         
         Args:
             image: Preprocessed image array
             model_name: Name of model to use (default: settings.DEFAULT_MODEL)
             confidence_threshold: Minimum confidence threshold
+            use_cache: Whether to use caching for results
             
         Returns:
             Classification results
@@ -183,6 +187,20 @@ class ClassificationService:
         
         if confidence_threshold is None:
             confidence_threshold = settings.CONFIDENCE_THRESHOLD
+        
+        # Generate cache key from image data
+        image_hash = None
+        if use_cache:
+            image_bytes = image.tobytes()
+            image_hash = hashlib.md5(image_bytes).hexdigest()
+            
+            # Check cache first
+            cached_result = await cache_service.get_cached_classification(image_hash, model_name)
+            if cached_result:
+                # Add cache hit indicator
+                cached_result["from_cache"] = True
+                cached_result["cache_hit"] = True
+                return cached_result
         
         # Check if model exists
         if model_name not in self.models:
@@ -221,13 +239,26 @@ class ClassificationService:
             
             processing_time = time.time() - start_time
             
-            return {
+            final_result = {
                 'predictions': filtered_predictions[:5],  # Top 5
                 'confidence_scores': filtered_scores,
                 'processing_time': processing_time,
                 'model_used': model_name,
-                'threshold_applied': confidence_threshold
+                'threshold_applied': confidence_threshold,
+                'from_cache': False,
+                'cache_hit': False
             }
+            
+            # Cache the result for future requests
+            if use_cache and image_hash:
+                await cache_service.cache_classification_result(
+                    image_hash, 
+                    model_name, 
+                    final_result,
+                    ttl=3600  # Cache for 1 hour
+                )
+            
+            return final_result
             
         except Exception as e:
             raise Exception(f"Classification failed with model {model_name}: {str(e)}")
