@@ -641,41 +641,12 @@ lsof -i :8000
 kill -9 <PID_NUMBER>
 ```
 
-## 開発ロードマップ
+## Documentation
 
-詳細な開発フェーズと今後の機能については[ROADMAP.md](./ROADMAP.md)をご覧ください。
+For detailed development phases and roadmap, see [ROADMAP.md](./ROADMAP.md).
 
-**現在の状況**: ✅ Phase 3 - 高度機能開発（100%完了）
+**日本語版ドキュメント**: [README.ja.md](./README.ja.md) | [ROADMAP.ja.md](./ROADMAP.ja.md)
 
-### 🎯 **最新の実装状況** (2025年9月2日現在)
+## License
 
-#### ✅ **完了済み機能**
-- **AIモデル統合**: TensorFlow (MobileNetV2, ResNet50) + PyTorch (ResNet18) - 100%完了
-- **REST API**: 全エンドポイント実装・テスト済み - 100%完了  
-- **フロントエンド**: Vue.js 3 + TypeScript + Tailwind CSS - 100%完了
-- **状態管理**: Pinia stores (upload, classification, error, settings) - 100%完了
-- **コンポーネント**: Layout, Upload, Results, Views - 100%完了
-- **エラーハンドリング**: 包括的エラー管理システム - 100%完了
-- **国際化対応**: Vue I18n による完全な日英二言語対応 - 100%完了 ✅
-- **ユーザー認証**: JWT認証とユーザー管理システム - 100%完了 ⭐NEW
-
-#### ✅ **完了済み（Phase 3）**
-- **カスタムモデル管理**: アップロード・検証・使用システム - 100%完了
-- **バッチ処理機能**: 複数画像同時分類（最大10ファイル） - 100%完了
-- **ウェブカメラ統合**: リアルタイム撮影・分類機能 - 100%完了
-- **パフォーマンス最適化**: 画像圧縮・キャッシュ・メトリクス - 100%完了
-
-#### 📊 **アクティブ機能**
-- ✅ リアルタイム画像分類 (4モデル対応)
-- ✅ 複数形式対応 (JPEG, PNG, WebP, BMP)
-- ✅ 分類履歴管理
-- ✅ 設定カスタマイズ
-- ✅ エラー回復システム
-- ✅ カスタムモデル管理システム
-- ✅ バッチ処理（最大10ファイル同時）
-- ✅ ウェブカメラリアルタイム分類
-- ✅ 画像最適化・キャッシュシステム
-
-## ライセンス
-
-このプロジェクトはMITライセンスの下で公開されています - 詳細は[LICENSE](LICENSE)ファイルをご覧ください。
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
