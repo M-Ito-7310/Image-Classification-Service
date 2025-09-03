@@ -1,0 +1,65 @@
+global:
+  scrape_interval: 15s
+  evaluation_interval: 15s
+
+rule_files:
+  # - "first_rules.yml"
+  # - "second_rules.yml"
+
+scrape_configs:
+  # Prometheus itself
+  - job_name: 'prometheus'
+    static_configs:
+      - targets: ['localhost:9090']
+
+  # AI Classification Service Backend
+  - job_name: 'ai-classifier-backend'
+    static_configs:
+      - targets: ['ai-classifier-backend-prod:8000']
+    metrics_path: '/api/v1/monitoring/system'
+    scrape_interval: 30s
+    scrape_timeout: 10s
+    scheme: http
+
+  # System metrics from custom endpoint
+  - job_name: 'ai-classifier-system'
+    static_configs:
+      - targets: ['ai-classifier-backend-prod:8000']
+    metrics_path: '/api/v1/monitoring/dashboard'
+    scrape_interval: 60s
+    scrape_timeout: 15s
+    scheme: http
+
+  # Redis metrics (if redis_exporter is available)
+  - job_name: 'redis'
+    static_configs:
+      - targets: ['redis:6379']
+    metrics_path: '/metrics'
+    scrape_interval: 30s
+    scheme: http
+
+  # PostgreSQL metrics (if postgres_exporter is available)
+  - job_name: 'postgres'
+    static_configs:
+      - targets: ['postgres:5432']
+    metrics_path: '/metrics'
+    scrape_interval: 30s
+    scheme: http
+
+  # Nginx metrics (if nginx-prometheus-exporter is available)
+  - job_name: 'nginx'
+    static_configs:
+      - targets: ['nginx:9113']
+    metrics_path: '/metrics'
+    scrape_interval: 30s
+    scheme: http
+
+alerting:
+  alertmanagers:
+    - static_configs:
+        - targets:
+          # - alertmanager:9093
+
+# Custom alerting rules
+rule_files:
+  - "/etc/prometheus/rules/*.yml"

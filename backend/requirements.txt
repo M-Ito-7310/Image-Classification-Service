@@ -43,6 +43,27 @@ httpx==0.28.0
 pydantic==2.10.2
 pydantic-settings==2.6.1
 
+# Multi-modal Processing
+librosa==0.10.2
+moviepy==1.0.3
+transformers==4.46.0
+huggingface-hub==0.26.2
+soundfile==0.12.1
+audioread==3.0.1
+scikit-image==0.24.0
+
+# Real-time Processing
+websockets==12.0
+asyncio-mqtt==0.16.2
+
+# Monitoring
+prometheus-client==0.21.0
+
+# Monetization & Billing
+stripe==9.12.0
+asyncpg==0.29.0
+
 # Utilities
 typing-extensions==4.12.2
 psutil==6.1.0
+tqdm==4.66.5

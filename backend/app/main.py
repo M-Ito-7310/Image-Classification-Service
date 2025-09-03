@@ -12,6 +12,7 @@ from app.routers import auth
 from app.services.cache_service import cache_service
 from app.core.database_indexes import optimize_database
 from app.middleware.security import RateLimitMiddleware, SecurityHeadersMiddleware, RequestValidationMiddleware
+from app.middleware.monetization import MonetizationMiddleware
 
 # Ensure upload directory exists
 UPLOAD_DIR = Path("uploads")
@@ -66,6 +67,7 @@ app = FastAPI(
 # Add security middleware
 app.add_middleware(SecurityHeadersMiddleware)
 app.add_middleware(RequestValidationMiddleware)
+app.add_middleware(MonetizationMiddleware)
 app.add_middleware(RateLimitMiddleware, calls_per_minute=60, calls_per_hour=1000)
 
 # Configure CORS
@@ -86,6 +88,30 @@ app.include_router(classification.router, prefix="/api/v1", tags=["classificatio
 app.include_router(models.router, prefix="/api/v1/models", tags=["models"])
 app.include_router(auth.router, prefix="/api/v1", tags=["authentication"])
 app.include_router(history.router, prefix="/api/v1", tags=["history"])
+
+# Import monitoring router
+from app.api.v1.endpoints.monitoring import router as monitoring_router
+app.include_router(monitoring_router, prefix="/api/v1/monitoring", tags=["monitoring"])
+
+# Import multi-modal router
+from app.api.v1.endpoints.multimodal import router as multimodal_router
+app.include_router(multimodal_router, prefix="/api/v1/multimodal", tags=["multimodal"])
+
+# Import marketplace router
+from app.api.v1.endpoints.marketplace import router as marketplace_router
+app.include_router(marketplace_router, prefix="/api/v1/marketplace", tags=["marketplace"])
+
+# Import real-time streaming router
+from app.api.v1.endpoints.realtime import router as realtime_router
+app.include_router(realtime_router, prefix="/api/v1/realtime", tags=["realtime"])
+
+# Import collaboration router
+from app.api.v1.endpoints.collaboration import router as collaboration_router
+app.include_router(collaboration_router, prefix="/api/v1/collaboration", tags=["collaboration"])
+
+# Import billing router
+from app.api.v1.endpoints.billing import router as billing_router
+app.include_router(billing_router, prefix="/api/v1/billing", tags=["billing"])
 
 @app.get("/")
 async def root():
