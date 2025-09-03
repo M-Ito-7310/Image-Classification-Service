@@ -12,7 +12,7 @@ from sqlalchemy.orm import Session
 from app.core.config import settings
 from app.core.database import get_db
 from app.models.user import User, ClassificationRecord
-from app.routers.auth import get_current_user
+from app.routers.auth import get_current_user_optional
 from app.services.image_service import ImageService
 from app.services.classification_service import ClassificationService
 from app.services.security_service import security_service
@@ -31,7 +31,7 @@ classification_service = ClassificationService()
 @router.post("/classify", response_model=ClassificationResponse)
 async def classify_image(
     file: UploadFile = File(..., description="Image file to classify"),
-    current_user: Optional[User] = Depends(get_current_user),
+    current_user: Optional[User] = Depends(get_current_user_optional),
     db: Session = Depends(get_db)
 ) -> ClassificationResponse:
     """

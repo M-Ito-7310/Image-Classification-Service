@@ -48,6 +48,16 @@ def get_current_user(token: str = Depends(oauth2_scheme), db: Session = Depends(
         )
     return user
 
+def get_current_user_optional(db: Session = Depends(get_db), token: Optional[str] = None) -> Optional[User]:
+    """Get current user from token if provided, otherwise return None."""
+    if not token:
+        return None
+    
+    user = get_user_from_token(db, token)
+    if not user or not user.is_active:
+        return None
+    return user
+
 def get_current_admin_user(current_user: User = Depends(get_current_user)) -> User:
     """Get current admin user."""
     if not current_user.is_admin:

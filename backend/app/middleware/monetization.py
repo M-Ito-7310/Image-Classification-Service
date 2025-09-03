@@ -23,6 +23,7 @@ class MonetizationMiddleware(BaseHTTPMiddleware):
             "/openapi.json",
             "/api/v1/health",
             "/api/v1/models",
+            "/api/v1/classify",
             "/api/v1/billing/pricing",
             "/api/v1/billing/tiers"
         ]
