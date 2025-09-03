@@ -78,6 +78,18 @@ export default {
       export: {
         title: '結果エクスポート',
         description: '分類結果をJSONやCSV形式でエクスポート。データ分析やレポート作成に活用可能。'
+      },
+      collaboration: {
+        title: 'エンタープライズコラボレーション',
+        description: 'チームワークスペース、プロジェクト共有、エンタープライズワークフロー向け共同モデル開発。'
+      },
+      marketplace: {
+        title: 'APIマーケットプレイス',
+        description: '包括的なマーケットプレイスプラットフォームを通じてAIモデルを発見・収益化。'
+      },
+      multimodal: {
+        title: 'マルチモーダル処理',
+        description: 'ストリーミング機能付きの高度な動画・音声・統合メディア分類。'
       }
     },
     howTo: {
@@ -620,6 +632,14 @@ export default {
       batch: {
         title: 'バッチ処理対応',
         description: '複数画像の一括処理に対応し、効率的な大量画像の分析が可能です。プログレスバーでリアルタイム進捗確認も可能です。'
+      },
+      enterprise: {
+        title: 'エンタープライズ機能',
+        description: '包括的なコラボレーションツール、APIマーケットプレイス、課金統合、エンタープライズデプロイメント向け高度なモニタリング。'
+      },
+      multimodal: {
+        title: 'マルチモーダル処理',
+        description: '包括的なメディア分析のためのリアルタイムストリーミングサポート付き高度な動画・音声分類機能。'
       }
     },
     techStack: {

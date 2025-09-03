@@ -78,6 +78,18 @@ export default {
       export: {
         title: 'Export Results',
         description: 'Export classification results in JSON or CSV format for data analysis and reporting.'
+      },
+      collaboration: {
+        title: 'Enterprise Collaboration',
+        description: 'Team workspaces, project sharing, and collaborative model development for enterprise workflows.'
+      },
+      marketplace: {
+        title: 'API Marketplace',
+        description: 'Discover and monetize AI models through our comprehensive marketplace platform.'
+      },
+      multimodal: {
+        title: 'Multi-modal Processing',
+        description: 'Advanced video, audio, and combined media classification with streaming capabilities.'
       }
     },
     howTo: {
@@ -620,6 +632,14 @@ export default {
       batch: {
         title: 'Batch Processing Support',
         description: 'Supports bulk processing of multiple images for efficient analysis of large image sets. Real-time progress tracking available with progress bars.'
+      },
+      enterprise: {
+        title: 'Enterprise Features',
+        description: 'Comprehensive collaboration tools, API marketplace, billing integration, and advanced monitoring for enterprise deployments.'
+      },
+      multimodal: {
+        title: 'Multi-modal Processing',
+        description: 'Advanced video and audio classification capabilities with real-time streaming support for comprehensive media analysis.'
       }
     },
     techStack: {

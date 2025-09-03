@@ -144,6 +144,51 @@
             {{ t('home.features.export.description') }}
           </p>
         </div>
+
+        <!-- Feature 7: Enterprise Collaboration -->
+        <div class="glass rounded-xl p-6 text-center hover:shadow-lg transition-all duration-200">
+          <div class="w-12 h-12 bg-indigo-100 dark:bg-indigo-900/30 rounded-lg flex items-center justify-center mx-auto mb-4">
+            <svg class="w-6 h-6 text-indigo-600 dark:text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+            </svg>
+          </div>
+          <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-2">
+            {{ t('home.features.collaboration.title') }}
+          </h3>
+          <p class="text-gray-600 dark:text-gray-400 text-sm">
+            {{ t('home.features.collaboration.description') }}
+          </p>
+        </div>
+
+        <!-- Feature 8: API Marketplace -->
+        <div class="glass rounded-xl p-6 text-center hover:shadow-lg transition-all duration-200">
+          <div class="w-12 h-12 bg-emerald-100 dark:bg-emerald-900/30 rounded-lg flex items-center justify-center mx-auto mb-4">
+            <svg class="w-6 h-6 text-emerald-600 dark:text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
+            </svg>
+          </div>
+          <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-2">
+            {{ t('home.features.marketplace.title') }}
+          </h3>
+          <p class="text-gray-600 dark:text-gray-400 text-sm">
+            {{ t('home.features.marketplace.description') }}
+          </p>
+        </div>
+
+        <!-- Feature 9: Multi-modal Processing -->
+        <div class="glass rounded-xl p-6 text-center hover:shadow-lg transition-all duration-200">
+          <div class="w-12 h-12 bg-rose-100 dark:bg-rose-900/30 rounded-lg flex items-center justify-center mx-auto mb-4">
+            <svg class="w-6 h-6 text-rose-600 dark:text-rose-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" />
+            </svg>
+          </div>
+          <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-2">
+            {{ t('home.features.multimodal.title') }}
+          </h3>
+          <p class="text-gray-600 dark:text-gray-400 text-sm">
+            {{ t('home.features.multimodal.description') }}
+          </p>
+        </div>
       </div>
 
       <!-- Getting Started Guide -->

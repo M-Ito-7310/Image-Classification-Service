@@ -27,7 +27,7 @@
             {{ t('about.overview.title') }}
           </h2>
           
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             <div>
               <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-3">
                 {{ t('about.overview.highAccuracy.title') }}
@@ -61,6 +61,24 @@
               </h3>
               <p class="text-gray-600 dark:text-gray-400 mb-4">
                 {{ t('about.overview.batch.description') }}
+              </p>
+            </div>
+
+            <div>
+              <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-3">
+                {{ t('about.overview.enterprise.title') }}
+              </h3>
+              <p class="text-gray-600 dark:text-gray-400 mb-4">
+                {{ t('about.overview.enterprise.description') }}
+              </p>
+            </div>
+
+            <div>
+              <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-3">
+                {{ t('about.overview.multimodal.title') }}
+              </h3>
+              <p class="text-gray-600 dark:text-gray-400 mb-4">
+                {{ t('about.overview.multimodal.description') }}
               </p>
             </div>
           </div>
