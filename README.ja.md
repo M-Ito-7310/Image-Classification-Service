@@ -1,18 +1,20 @@
 # AI画像分類・認識サービス
 
-[![プロジェクトステータス](https://img.shields.io/badge/status-Phase%204%20Complete-brightgreen.svg)](https://github.com/M-Ito-7310/image-classification-service)
-[![Python](https://img.shields.io/badge/python-3.11%2B-green.svg)](https://www.python.org/)
+[![プロジェクトステータス](https://img.shields.io/badge/status-Phase%208%20Complete-brightgreen.svg)](https://github.com/M-Ito-7310/image-classification-service)
+[![Python](https://img.shields.io/badge/python-3.12%2B-green.svg)](https://www.python.org/)
 [![Vue.js](https://img.shields.io/badge/vue.js-3.5-green.svg)](https://vuejs.org/)
 [![FastAPI](https://img.shields.io/badge/FastAPI-0.115-blue.svg)](https://fastapi.tiangolo.com/)
+[![TypeScript](https://img.shields.io/badge/typescript-5.0%2B-blue.svg)](https://www.typescriptlang.org/)
+[![エンタープライズ対応](https://img.shields.io/badge/enterprise-ready-success.svg)](https://github.com/M-Ito-7310/image-classification-service)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 **言語**: [English](README.md) | 日本語
 
-AIを活用した画像分類・認識Webサービスです。最新のWeb技術と本格的なアーキテクチャで構築され、複数のAIモデルに対応したリアルタイム画像処理機能を提供します。
+エンタープライズグレードのAI画像分類・認識サービスです。高度なコラボレーション機能、API収益化、リアルタイム処理を備えた総合的なビジネスインテリジェンス機能を提供します。最新のWeb技術と本格的なアーキテクチャで構築され、マルチモーダルAI統合に対応しています。
 
 ## 概要
 
-このプロジェクトは、高度なAI/ML統合、モダンなWeb開発プラクティス、スケーラブルなアーキテクチャ設計を実証するものです。AI統合を含むフルスタック開発スキルを示す包括的なポートフォリオプロジェクトとして構築され、最先端の機械学習技術と直感的なユーザーインターフェースを組み合わせています。
+このプロジェクトは、エンタープライズレベルのAI/ML統合、モダンなWeb開発プラクティス、スケーラブルなSaaSアーキテクチャ設計を実証するものです。AI統合、コラボレーションワークフロー、API収益化、エンタープライズセキュリティ機能を含む高度なフルスタック開発スキルを示す包括的なポートフォリオプロジェクトとして構築されています。
 
 ## アーキテクチャ概要
 
@@ -35,14 +37,15 @@ AIを活用した画像分類・認識Webサービスです。最新のWeb技術
 ## 主要機能
 
 ### 🔍 **画像処理機能**
-- **マルチモデルAI分類**: TensorFlow、PyTorch、Google Cloud Vision APIに対応
-- **リアルタイム処理**: 即座の画像解析とストリーミング結果表示
+- **マルチモデルAI分類**: TensorFlow、PyTorch、Google Cloud Vision APIに対応 ✅ **完了**
+- **リアルタイム処理**: WebSocketベースのストリーミング結果とライブ更新 ✅ **完了**
 - **バッチ処理**: 複数画像の同時分類と進捗追跡 ✅ **完了**
 - **スマート前処理**: 自動リサイズ、正規化、最適化 ✅ **完了**
-- **信頼度スコア**: 詳細な予測信頼度と閾値フィルタリング
+- **信頼度スコア**: 詳細な予測信頼度と閾値フィルタリング ✅ **完了**
 - **カスタムモデルサポート**: カスタム訓練モデルのアップロードと使用 ✅ **完了**
 - **ウェブカメラ統合**: リアルタイムカメラキャプチャと分類 ✅ **完了**
 - **結果キャッシング**: パフォーマンス向上のためのRedis駆動インテリジェントキャッシング ✅ **完了**
+- **マルチモーダル処理**: 動画・音声分類機能 ✅ **完了**
 
 ### 📤 **高度なアップロードシステム**
 - **ドラッグ&ドロップ**: モダンなファイルアップロード体験と視覚的フィードバック
@@ -67,12 +70,21 @@ AIを活用した画像分類・認識Webサービスです。最新のWeb技術
 - **アクセシビリティ**: 包括的設計のためのWCAG 2.1 AAコンプライアンス
 - **プログレッシブWebアプリ**: オフライン機能付きPWA機能 ✅ **完了**
 
+### 🏢 **エンタープライズ機能**
+- **APIマーケットプレイス**: モデル共有と収益化プラットフォーム ✅ **完了**
+- **コラボレーションワークスペース**: チームベースプロジェクト管理と共有 ✅ **完了**
+- **API収益化**: 使用量ベース課金とティア管理 ✅ **完了**
+- **リアルタイムストリーミング**: ライブ動画・音声分類 ✅ **完了**
+- **高度なモニタリング**: 包括的システム・パフォーマンス分析 ✅ **完了**
+- **エンタープライズセキュリティ**: 多層検証と脅威検知 ✅ **完了**
+- **課金統合**: サブスクリプション管理と使用量追跡 ✅ **完了**
+
 ### 🔧 **開発者向け機能**
-- **RESTful API**: OpenAPI/Swaggerドキュメント付き包括的API
-- **ヘルスモニタリング**: システムヘルスチェックとパフォーマンス指標
-- **コンテナ化デプロイメント**: DockerとDocker Composeサポート
-- **開発ツール**: ホットリロード、テスト、デバッグユーティリティ
-- **CI/CD対応**: GitHub Actionsワークフローとデプロイメント自動化
+- **RESTful API**: OpenAPI/Swaggerドキュメント付き包括的API ✅ **完了**
+- **ヘルスモニタリング**: システムヘルスチェックとパフォーマンス指標 ✅ **完了**
+- **コンテナ化デプロイメント**: DockerとDocker Composeサポート ✅ **完了**
+- **開発ツール**: ホットリロード、テスト、デバッグユーティリティ ✅ **完了**
+- **CI/CD対応**: GitHub Actionsワークフローとデプロイメント自動化 ✅ **完了**
 - **パフォーマンス最適化**: データベースインデックスとRedisキャッシング ✅ **完了**
 - **セキュリティ強化**: 多層セキュリティミドルウェアと検証 ✅ **完了**
 
@@ -98,21 +110,26 @@ AIを活用した画像分類・認識Webサービスです。最新のWeb技術
 - **セキュリティ**: レート制限付き多層セキュリティミドルウェア
 
 ### AI/ML統合
-- **ディープラーニング**: TensorFlow 2.18とPyTorch 2.5サポート
-- **コンピュータビジョン**: OpenCV 4.10による画像前処理
-- **クラウドAI**: Google Cloud Vision API統合
+- **ディープラーニング**: インテリジェントモデル選択によるTensorFlow 2.18とPyTorch 2.5サポート
+- **コンピュータビジョン**: OpenCV 4.10による高度な画像前処理
+- **クラウドAI**: フォールバックサポート付きGoogle Cloud Vision API統合
+- **マルチモーダルAI**: 動画、音声、統合メディア分類
 - **画像処理**: Pillow 11.0による形式変換と最適化
-- **モデル管理**: 動的モデルロードと切り替え
-- **パフォーマンス**: より高速な推論のためのGPUアクセラレーションサポート
+- **モデル管理**: 動的モデルロード、カスタムモデルサポート、マーケットプレイス
+- **パフォーマンス**: 自動最適化によるGPUアクセラレーションサポート
+- **リアルタイム処理**: WebSocketベースストリーミング分類
 
 ### インフラストラクチャ & DevOps
-- **コンテナ化**: 開発用DockerとDocker Compose
+- **コンテナ化**: 開発・本番用DockerとDocker Compose
 - **データベース**: 接続プーリング、マイグレーション、戦略的インデックス付きPostgreSQL
-- **キャッシング**: セッションストレージ、結果キャッシング、パフォーマンス最適化用Redis
+- **キャッシング**: セッションストレージ、結果キャッシング、リアルタイムデータ用Redis
 - **リバースプロキシ**: 静的ファイルとロードバランシング用Nginx
-- **モニタリング**: 強化されたヘルスチェック、システムメトリクス、パフォーマンス追跡
-- **環境管理**: 本番用Dockerマルチステージビルド
-- **セキュリティ**: 包括的セキュリティミドルウェアとファイル検証システム
+- **モニタリング**: 強化されたヘルスチェック、システムメトリクス、包括的分析ダッシュボード
+- **環境管理**: 本番デプロイメント用Dockerマルチステージビルド
+- **セキュリティ**: 多層セキュリティミドルウェア、ファイル検証、脅威検知
+- **APIゲートウェイ**: レート制限、APIキー管理、使用量追跡
+- **課金システム**: 使用量ベース収益化とサブスクリプションティア
+- **コラボレーションツール**: ワークスペース管理とチームコラボレーション機能
 
 ## クイックスタート
 
@@ -209,7 +226,7 @@ AIを活用した画像分類・認識Webサービスです。最新のWeb技術
 ## APIドキュメント
 
 ### 認証
-JWT認証システムが実装済みです。ユーザー登録・ログイン機能をご利用いただけます。
+セキュアなセッション管理とAPIキーサポートを備えたJWTベース認証システム。エンタープライズ機能には有効なAPIキーが必要です。
 
 ### コアエンドポイント
 
@@ -220,54 +237,56 @@ Content-Type: multipart/form-data
 
 パラメータ:
 - file: 画像ファイル（必須）
-- model: モデル名（オプション、デフォルト: "default"）
+- model: モデル名（オプション、デフォルト: "auto"）
 - threshold: 信頼度閾値（オプション、デフォルト: 0.5）
 ```
 
-**レスポンス例:**
-```json
-{
-  "success": true,
-  "predictions": [
-    {
-      "class_name": "ゴールデンレトリバー",
-      "confidence": 0.89,
-      "class_id": 207
-    },
-    {
-      "class_name": "ラブラドールレトリバー", 
-      "confidence": 0.76,
-      "class_id": 208
-    }
-  ],
-  "processing_time": 1.23,
-  "model_used": "imagenet_mobilenet_v2"
-}
+#### バッチ分類
+```http
+POST /api/v1/batch/classify
+Content-Type: multipart/form-data
+
+パラメータ:
+- files: 複数の画像ファイル（必須）
+- model: モデル名（オプション）
+```
+
+#### リアルタイムストリーミング
+```http
+POST /api/v1/realtime/stream/create
+WebSocket: /api/v1/realtime/stream/{stream_id}/ws
+
+パラメータ:
+- stream_type: webcam|rtmp|upload
+- classification_interval: 処理頻度（秒）
+```
+
+#### マルチモーダル処理
+```http
+POST /api/v1/multimodal/video/classify    # 動画分類
+POST /api/v1/multimodal/audio/classify    # 音声分類
+POST /api/v1/multimodal/combined/classify # 統合メディア分類
 ```
 
 #### モデル管理
 ```http
-GET /api/v1/models
+GET /api/v1/models                    # 利用可能モデル一覧
+POST /api/v1/models/upload           # カスタムモデルアップロード
+GET /api/v1/models/custom            # ユーザーのカスタムモデル一覧
 ```
 
-**レスポンス:**
-```json
-{
-  "available_models": [
-    {
-      "name": "imagenet_mobilenet_v2",
-      "description": "ImageNetで学習されたMobileNet v2",
-      "classes": 1000,
-      "input_size": [224, 224],
-      "status": "active"
-    }
-  ]
-}
+#### エンタープライズ機能
+```http
+GET /api/v1/marketplace/models       # モデルマーケットプレイス参照
+POST /api/v1/collaboration/workspaces # コラボレーションワークスペース作成
+GET /api/v1/billing/usage           # 使用量分析
+GET /api/v1/monitoring/dashboard    # システムモニタリング
 ```
 
 #### ヘルスチェック
 ```http
-GET /api/v1/health
+GET /api/v1/health                   # 基本ヘルスチェック
+GET /api/v1/monitoring/health/detailed # 包括的ヘルスチェック
 ```
 
 完全なAPIドキュメントについては、http://localhost:8000/docs をご覧ください。
@@ -503,38 +522,18 @@ docker-compose -f docker-compose.prod.yml up -d
 
 詳細な開発フェーズと今後の機能については[ROADMAP.ja.md](./ROADMAP.ja.md)をご覧ください。
 
-**現在のステータス**: 🚀 フェーズ4 - 本番最適化（100%完了）
-
-### 🎯 **最新の実装状況** (2025年9月2日現在)
-
-#### ✅ **完了済み機能**
-- **AIモデル統合**: TensorFlow (MobileNetV2, ResNet50) + PyTorch (ResNet18) - 100%完了
-- **REST API**: 全エンドポイント実装・テスト済み - 100%完了  
-- **フロントエンド**: Vue.js 3 + TypeScript + Tailwind CSS - 100%完了
-- **状態管理**: Pinia stores (upload, classification, error, settings) - 100%完了
-- **コンポーネント**: Layout, Upload, Results, Views - 100%完了
-- **エラーハンドリング**: 包括的エラー管理システム - 100%完了
-- **国際化対応**: Vue I18n による完全な日英二言語対応 - 100%完了 ✅
-- **ユーザー認証**: JWT認証とユーザー管理システム - 100%完了 ✅
-- **高度な分類機能**: カスタムモデル、バッチ処理 - 100%完了 ✅
-- **本番最適化**: Redisキャッシング、セキュリティ強化、PWA機能 - 100%完了 ✅
-
-
-#### 📊 **アクティブ機能**
-- ✅ リアルタイム画像分類 (4モデル対応)
-- ✅ 複数形式対応 (JPEG, PNG, WebP, BMP)
-- ✅ 分類履歴管理
-- ✅ 設定カスタマイズ
-- ✅ エラー回復システム
-- ✅ ユーザー認証・プロフィール管理
-- ✅ 日英二言語インターフェース
+**現在のステータス**: 🚀 フェーズ8 - エンタープライズコラボレーション & API収益化（100%完了）
 
 ### 開発進捗
 - ✅ **フェーズ1**: 基盤とアーキテクチャ（100%完了）
 - ✅ **フェーズ2**: AI統合・UI開発（100%完了）
 - ✅ **フェーズ3**: 高度な機能（100%完了）
 - ✅ **フェーズ4**: 本番最適化（100%完了 - Redisキャッシング、セキュリティ、PWA）
-- ⏳ **フェーズ5**: デプロイメント・モニタリング（開始準備完了）
+- ✅ **フェーズ5**: デプロイメント・モニタリング（100%完了）
+- ✅ **フェーズ6**: マルチモーダル処理（100%完了 - 動画・音声分類）
+- ✅ **フェーズ7**: リアルタイムストリーミング（100%完了 - WebSocket統合）
+- ✅ **フェーズ8**: エンタープライズコラボレーション & API収益化（100%完了）
+- 🔄 **フェーズ9**: 高度な分析 & ビジネスインテリジェンス（計画中）
 
 ## トラブルシューティング
 
