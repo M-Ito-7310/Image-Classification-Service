@@ -12,7 +12,7 @@ from sqlalchemy.orm import Session
 from app.core.config import settings
 from app.core.database import get_db
 from app.models.user import User, ClassificationRecord
-from app.routers.auth import get_current_user_optional
+from app.utils.auth import get_current_user_optional
 from app.services.image_service import ImageService
 from app.services.classification_service import ClassificationService
 from app.services.security_service import security_service

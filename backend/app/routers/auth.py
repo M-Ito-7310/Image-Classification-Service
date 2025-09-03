@@ -1,5 +1,5 @@
 from fastapi import APIRouter, Depends, HTTPException, status, Request
-from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
+from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm, HTTPBearer, HTTPAuthorizationCredentials
 from sqlalchemy.orm import Session
 from datetime import datetime, timezone
 from typing import Optional
@@ -31,6 +31,7 @@ from app.utils.auth import (
 router = APIRouter(prefix="/auth", tags=["authentication"])
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/api/v1/auth/login")
+http_bearer = HTTPBearer(auto_error=False)
 
 def get_current_user(token: str = Depends(oauth2_scheme), db: Session = Depends(get_db)) -> User:
     """Get current authenticated user from token."""
@@ -48,12 +49,15 @@ def get_current_user(token: str = Depends(oauth2_scheme), db: Session = Depends(
         )
     return user
 
-def get_current_user_optional(db: Session = Depends(get_db), token: Optional[str] = None) -> Optional[User]:
+def get_current_user_optional(
+    credentials: Optional[HTTPAuthorizationCredentials] = Depends(http_bearer),
+    db: Session = Depends(get_db)
+) -> Optional[User]:
     """Get current user from token if provided, otherwise return None."""
-    if not token:
+    if not credentials or not credentials.credentials:
         return None
     
-    user = get_user_from_token(db, token)
+    user = get_user_from_token(db, credentials.credentials)
     if not user or not user.is_active:
         return None
     return user

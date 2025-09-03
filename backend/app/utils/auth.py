@@ -134,6 +134,7 @@ def get_user_from_token(db: Session, token: str) -> Optional[User]:
     user = db.query(User).filter(User.id == token_data.user_id).first()
     return user
 
+
 def refresh_access_token(db: Session, refresh_token: str) -> Optional[tuple[str, str]]:
     """Refresh access token using refresh token."""
     session = db.query(UserSession).filter(
