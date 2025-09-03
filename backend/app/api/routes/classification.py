@@ -6,13 +6,14 @@ import uuid
 import os
 import shutil
 import json
+import logging
 from pathlib import Path
 from sqlalchemy.orm import Session
 
 from app.core.config import settings
 from app.core.database import get_db
 from app.models.user import User, ClassificationRecord
-from app.utils.auth import get_current_user_optional
+from app.routers.auth import get_current_user_optional
 from app.services.image_service import ImageService
 from app.services.classification_service import ClassificationService
 from app.services.security_service import security_service
@@ -23,6 +24,9 @@ from app.schemas.classification import (
 )
 
 router = APIRouter()
+
+# Initialize logger
+logger = logging.getLogger(__name__)
 
 # Initialize services
 image_service = ImageService()
