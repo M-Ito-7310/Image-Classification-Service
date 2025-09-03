@@ -8,7 +8,7 @@ from pydantic import BaseModel, Field
 from datetime import datetime
 
 from app.services.monetization_service import monetization_service, SubscriptionTier
-from app.middleware.auth import get_api_key_info
+from app.utils.auth import get_api_key_info
 
 router = APIRouter()
 
@@ -18,7 +18,7 @@ class CreateSubscriptionRequest(BaseModel):
     payment_method_id: Optional[str] = Field(None, description="Payment method identifier")
     
     class Config:
-        schema_extra = {
+        json_schema_extra = {
             "example": {
                 "tier": "professional",
                 "payment_method_id": "pm_1234567890"
@@ -31,7 +31,7 @@ class APIKeyRequest(BaseModel):
     permissions: Optional[list] = Field(default=None, description="API key permissions")
     
     class Config:
-        schema_extra = {
+        json_schema_extra = {
             "example": {
                 "name": "Production API Key",
                 "permissions": ["classification", "multimodal"]
@@ -113,7 +113,7 @@ async def get_subscription_info(
 @router.get("/usage/analytics")
 async def get_usage_analytics(
     user_id: str = Query(...),  # In production, this would come from authentication
-    period: str = Query("current_month", regex="^(current_month|last_month|last_7_days)$")
+    period: str = Query("current_month", pattern="^(current_month|last_month|last_7_days)$")
 ) -> Dict[str, Any]:
     """
     Get usage analytics for user.

@@ -20,6 +20,53 @@ from app.schemas.classification import (
 
 router = APIRouter()
 
+@router.get("/")
+async def get_available_models() -> Dict[str, Any]:
+    """
+    Get list of available models for classification.
+    Public endpoint - no authentication required.
+    
+    Returns:
+        List of available models with their information
+    """
+    available_models = [
+        {
+            "name": "mobilenet_v2",
+            "description": "Fast and efficient model for general image classification",
+            "version": "1.0",
+            "classes": 1000,
+            "status": "active",
+            "accuracy": 0.72,
+            "inference_time": 50,
+            "provider": "tensorflow"
+        },
+        {
+            "name": "resnet18", 
+            "description": "Lightweight ResNet model for image classification",
+            "version": "1.0",
+            "classes": 1000,
+            "status": "active", 
+            "accuracy": 0.70,
+            "inference_time": 45,
+            "provider": "pytorch"
+        },
+        {
+            "name": "efficientnet_b0",
+            "description": "Balanced model with good accuracy and efficiency", 
+            "version": "1.0",
+            "classes": 1000,
+            "status": "active",
+            "accuracy": 0.77,
+            "inference_time": 80,
+            "provider": "tensorflow"
+        }
+    ]
+    
+    return {
+        "available_models": available_models,
+        "default_model": "mobilenet_v2"
+    }
+
 @router.post("/upload", response_model=CustomModelResponse)
 async def upload_custom_model(
     file: UploadFile = File(..., description="Custom model file"),

@@ -232,10 +232,16 @@
 </template>
 
 <script setup lang="ts">
+import { computed } from 'vue'
 import { useI18n } from 'vue-i18n'
+import { useClassificationStore } from '@/stores/classification'
 
 // i18n
 const { t } = useI18n()
+
+// Classification store
+const classificationStore = useClassificationStore()
+const hasResults = computed(() => classificationStore.hasResults)
 </script>
 
 <style scoped>

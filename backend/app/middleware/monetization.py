@@ -22,6 +22,7 @@ class MonetizationMiddleware(BaseHTTPMiddleware):
             "/redoc", 
             "/openapi.json",
             "/api/v1/health",
+            "/api/v1/models",
             "/api/v1/billing/pricing",
             "/api/v1/billing/tiers"
         ]

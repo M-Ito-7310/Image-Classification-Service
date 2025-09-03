@@ -16,7 +16,7 @@ class ModelMetadata(BaseModel):
     """Model metadata schema for marketplace uploads."""
     name: str = Field(..., min_length=1, max_length=100)
     description: str = Field(..., min_length=10, max_length=1000)
-    category: str = Field(..., regex="^(image_classification|object_detection|semantic_segmentation|custom)$")
+    category: str = Field(..., pattern="^(image_classification|object_detection|semantic_segmentation|custom)$")
     input_type: str = Field(..., description="Type of input data (e.g., 'image', 'text', 'audio')")
     output_type: str = Field(..., description="Type of output (e.g., 'classification', 'detection', 'segmentation')")
     tags: Optional[list] = Field(default=[], description="Tags for model discovery")
@@ -24,7 +24,7 @@ class ModelMetadata(BaseModel):
     version: Optional[str] = Field(default="1.0.0", description="Model version")
     
     class Config:
-        schema_extra = {
+        json_schema_extra = {
             "example": {
                 "name": "Custom Plant Classifier",
                 "description": "A CNN model trained to classify different plant species with 95% accuracy on validation set.",
@@ -363,7 +363,7 @@ async def search_models(
     query: str = Query(..., min_length=2, description="Search query"),
     category: Optional[str] = Query(None, description="Filter by category"),
     min_rating: Optional[float] = Query(None, ge=0.0, le=5.0, description="Minimum rating filter"),
-    sort_by: str = Query("relevance", regex="^(relevance|rating|downloads|date)$", description="Sort order"),
+    sort_by: str = Query("relevance", pattern="^(relevance|rating|downloads|date)$", description="Sort order"),
     page: int = Query(1, ge=1, description="Page number"),
     page_size: int = Query(20, ge=1, le=100, description="Results per page")
 ) -> Dict[str, Any]:

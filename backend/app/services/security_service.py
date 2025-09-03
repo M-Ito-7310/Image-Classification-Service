@@ -2,8 +2,15 @@
 
 import os
 import hashlib
-import magic
 import tempfile
+
+# Try to import magic, but handle Windows compatibility issues
+try:
+    import magic
+    MAGIC_AVAILABLE = True
+except ImportError:
+    MAGIC_AVAILABLE = False
+    import mimetypes  # Fallback for Windows
 from typing import List, Dict, Any, Optional, Tuple
 from pathlib import Path
 from PIL import Image, ImageFile
@@ -81,9 +88,13 @@ class FileSecurityService:
                 validation_result["errors"].append("Empty file")
                 return validation_result
             
-            # 2. Detect actual MIME type using python-magic
+            # 2. Detect actual MIME type
             try:
-                detected_mime = magic.from_buffer(file_content, mime=True)
+                if MAGIC_AVAILABLE:
+                    detected_mime = magic.from_buffer(file_content, mime=True)
+                else:
+                    # Fallback for Windows - use file extension and header inspection
+                    detected_mime = self._detect_mime_fallback(filename, file_content)
                 validation_result["mime_type"] = detected_mime
             except Exception as e:
                 validation_result["errors"].append(f"MIME type detection failed: {e}")
@@ -244,6 +255,44 @@ class FileSecurityService:
             score += 5
         
         return max(0, min(100, score))
+    
+    def _detect_mime_fallback(self, filename: str, file_content: bytes) -> str:
+        """
+        Fallback MIME type detection for Windows.
+        Uses file extension and magic bytes inspection.
+        """
+        # Check file header magic bytes
+        if len(file_content) >= 8:
+            header = file_content[:8]
+            
+            # Check common image formats
+            if header.startswith(b'\xff\xd8\xff'):
+                return 'image/jpeg'
+            elif header.startswith(b'\x89PNG\r\n\x1a\n'):
+                return 'image/png'
+            elif header.startswith(b'GIF87a') or header.startswith(b'GIF89a'):
+                return 'image/gif'
+            elif header.startswith(b'BM'):
+                return 'image/bmp'
+            elif header.startswith(b'\x00\x00\x01\x00') or header.startswith(b'\x00\x00\x02\x00'):
+                return 'image/x-icon'
+            elif header.startswith(b'RIFF') and file_content[8:12] == b'WEBP':
+                return 'image/webp'
+        
+        # Fallback to extension-based detection
+        ext = os.path.splitext(filename)[1].lower()
+        mime_map = {
+            '.jpg': 'image/jpeg',
+            '.jpeg': 'image/jpeg',
+            '.png': 'image/png',
+            '.gif': 'image/gif',
+            '.bmp': 'image/bmp',
+            '.webp': 'image/webp',
+            '.ico': 'image/x-icon',
+            '.svg': 'image/svg+xml',
+        }
+        
+        return mime_map.get(ext, 'application/octet-stream')
     
     def generate_safe_filename(self, original_filename: str, user_id: Optional[int] = None) -> str:
         """Generate a safe filename for storage."""

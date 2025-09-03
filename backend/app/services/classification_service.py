@@ -41,6 +41,8 @@ class ClassificationService:
     def __init__(self):
         self.models = {}
         self.model_info = {}
+        self._actual_default_model = None  # Track the actual selected model
+        self._models_initialized = False  # Track lazy initialization
         self._initialize_models()
     
     def _initialize_models(self):
@@ -69,6 +71,12 @@ class ClassificationService:
         
         # Add mock model for development/testing
         self._add_mock_model()
+        
+        # Handle 'auto' setting for intelligent model selection
+        self._handle_auto_model_selection()
+        
+        # Mark models as initialized
+        self._models_initialized = True
     
     def _load_tensorflow_models(self):
         """Load TensorFlow models."""
@@ -183,7 +191,7 @@ class ClassificationService:
         start_time = time.time()
         
         if model_name is None:
-            model_name = settings.DEFAULT_MODEL
+            model_name = self.get_default_model()
         
         if confidence_threshold is None:
             confidence_threshold = settings.CONFIDENCE_THRESHOLD
@@ -592,6 +600,70 @@ class ClassificationService:
                 if user_id and model_info.get('user_id') != user_id:
                     continue
             
+            # Add is_default flag
+            model_info['is_default'] = (model_name == self.get_default_model())
             models_list.append(model_info)
         
         return models_list
+    
+    def _handle_auto_model_selection(self):
+        """
+        Handle 'auto' setting for intelligent model selection.
+        Only selects model if DEFAULT_MODEL is set to 'auto'.
+        """
+        if settings.DEFAULT_MODEL.lower() == 'auto':
+            self._actual_default_model = self._select_best_available_model()
+            print(f"\n{'='*60}")
+            print(f"Auto Model Selection: {self._actual_default_model}")
+            print(f"{'='*60}\n")
+        else:
+            # Use explicitly specified model
+            self._actual_default_model = settings.DEFAULT_MODEL
+            if self._actual_default_model in self.models:
+                print(f"Using configured model: {self._actual_default_model}")
+            else:
+                print(f"Warning: Configured model '{self._actual_default_model}' not available, using mock")
+                self._actual_default_model = 'mock'
+    
+    def _select_best_available_model(self) -> str:
+        """
+        Select the best available model based on priority.
+        
+        Returns:
+            Selected model name
+        """
+        # Priority order for real AI models
+        preferred_models = [
+            ('mobilenet_v2', 'TensorFlow MobileNetV2 - Fast & accurate (1000+ classes)'),
+            ('resnet50', 'TensorFlow ResNet50 - High accuracy (1000+ classes)'),
+            ('resnet18_torch', 'PyTorch ResNet18 - Alternative (1000+ classes)'),
+            ('google_vision', 'Google Cloud Vision API - Comprehensive detection'),
+            ('mock', 'Mock model - Development only (5 basic classes)')
+        ]
+        
+        print("Checking available models:")
+        # Find the first available model
+        for model_name, description in preferred_models:
+            if model_name in self.models:
+                print(f"  [FOUND] {description}")
+                
+                if model_name == 'mock':
+                    print("  [WARNING] Using mock model - Install TensorFlow/PyTorch for real AI capabilities")
+                else:
+                    print(f"  [INFO] Clock images will be classified correctly with {model_name}")
+                
+                return model_name
+            else:
+                print(f"  [NOT FOUND] {model_name}")
+        
+        # Fallback (should not happen due to mock)
+        return 'mock'
+    
+    def get_default_model(self) -> str:
+        """
+        Get the actual default model (handles 'auto' setting).
+        
+        Returns:
+            Actual model name being used
+        """
+        return self._actual_default_model or settings.DEFAULT_MODEL

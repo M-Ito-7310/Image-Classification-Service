@@ -15,7 +15,7 @@ import librosa
 import torch
 import torchvision.transforms as transforms
 from transformers import pipeline
-import moviepy.editor as mp
+import moviepy as mp
 
 from app.services.classification_service import ClassificationService
 from app.core.config import settings

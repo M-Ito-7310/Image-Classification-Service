@@ -10,13 +10,14 @@ fastapi-cors==0.0.6
 sqlalchemy==2.0.36
 psycopg2-binary==2.9.10
 alembic==1.14.0
-redis==5.2.0
+redis==6.4.0
 
 # Authentication & Security
 python-jose[cryptography]==3.3.0
 passlib[bcrypt]==1.7.4
 python-dotenv==1.0.1
 python-magic==0.4.27
+python-magic-bin==0.4.14  # Windows compatibility
 slowapi==0.1.9
 
 # Image Processing
@@ -44,13 +45,16 @@ pydantic==2.10.2
 pydantic-settings==2.6.1
 
 # Multi-modal Processing
-librosa==0.10.2
-moviepy==1.0.3
-transformers==4.46.0
-huggingface-hub==0.26.2
-soundfile==0.12.1
+librosa==0.11.0
+moviepy==2.2.1
+transformers==4.56.0
+huggingface-hub==0.34.4
+soundfile==0.13.1
 audioread==3.0.1
 scikit-image==0.24.0
+openai-whisper==20250625
+sentence-transformers==5.1.0
+tiktoken==0.11.0
 
 # Real-time Processing
 websockets==12.0

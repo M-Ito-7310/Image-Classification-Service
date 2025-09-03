@@ -11,10 +11,9 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import text, func
 import redis.asyncio as redis
 
-from app.core.database import get_database
+from app.core.database import get_db
 from app.services.cache_service import CacheService
-from app.models.classification import ClassificationRecord
-from app.models.users import User
+from app.models.user import ClassificationRecord, User
 
 router = APIRouter()
 
@@ -69,7 +68,7 @@ async def get_system_metrics() -> Dict[str, Any]:
     }
 
 @router.get("/database")
-async def get_database_metrics(db: AsyncSession = Depends(get_database)) -> Dict[str, Any]:
+async def get_db_metrics(db: AsyncSession = Depends(get_db)) -> Dict[str, Any]:
     """Get database performance and usage metrics."""
     
     try:
@@ -183,7 +182,7 @@ async def get_cache_metrics() -> Dict[str, Any]:
         }
 
 @router.get("/application")
-async def get_application_metrics(db: AsyncSession = Depends(get_database)) -> Dict[str, Any]:
+async def get_application_metrics(db: AsyncSession = Depends(get_db)) -> Dict[str, Any]:
     """Get application-specific performance metrics."""
     
     try:
@@ -260,7 +259,7 @@ async def get_application_metrics(db: AsyncSession = Depends(get_database)) -> D
         )
 
 @router.get("/health/detailed")
-async def get_detailed_health_check(db: AsyncSession = Depends(get_database)) -> Dict[str, Any]:
+async def get_detailed_health_check(db: AsyncSession = Depends(get_db)) -> Dict[str, Any]:
     """Comprehensive health check with dependency validation."""
     
     health_status = {
@@ -350,13 +349,13 @@ async def get_detailed_health_check(db: AsyncSession = Depends(get_database)) ->
     return health_status
 
 @router.get("/dashboard")
-async def get_monitoring_dashboard(db: AsyncSession = Depends(get_database)) -> Dict[str, Any]:
+async def get_monitoring_dashboard(db: AsyncSession = Depends(get_db)) -> Dict[str, Any]:
     """Get comprehensive dashboard data for monitoring interface."""
     
     try:
         # Get metrics from all endpoints
         system_metrics = await get_system_metrics()
-        db_metrics = await get_database_metrics(db)
+        db_metrics = await get_db_metrics(db)
         cache_metrics = await get_cache_metrics()
         app_metrics = await get_application_metrics(db)
         health_check = await get_detailed_health_check(db)

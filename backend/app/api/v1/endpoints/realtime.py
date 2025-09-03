@@ -14,7 +14,7 @@ router = APIRouter()
 @router.post("/stream/create")
 async def create_stream_session(
     user_id: str = Form(...),
-    stream_type: str = Form("webcam", regex="^(webcam|rtmp|upload)$"),
+    stream_type: str = Form("webcam", pattern="^(webcam|rtmp|upload)$"),
     classification_interval: float = Form(1.0, ge=0.1, le=10.0),
     model_name: str = Form("imagenet_mobilenet_v2"),
     camera_index: Optional[int] = Form(None),
@@ -391,7 +391,7 @@ async def get_realtime_capabilities() -> Dict[str, Any]:
 @router.get("/stream/{stream_id}/export")
 async def export_stream_data(
     stream_id: str,
-    format: str = Query("json", regex="^(json|csv)$"),
+    format: str = Query("json", pattern="^(json|csv)$"),
     include_frames: bool = Query(False),
     max_records: int = Query(100, ge=1, le=1000)
 ) -> Dict[str, Any]:

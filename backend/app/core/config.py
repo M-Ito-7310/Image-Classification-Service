@@ -11,7 +11,7 @@ class Settings(BaseSettings):
     
     # CORS Settings
     ALLOWED_HOSTS: List[str] = Field(
-        default=["http://localhost:3000", "http://127.0.0.1:3000"]
+        default=["http://localhost:3000", "http://127.0.0.1:3000", "http://localhost:5173", "http://127.0.0.1:5173"]
     )
     
     # File Upload Settings
@@ -41,8 +41,9 @@ class Settings(BaseSettings):
     GOOGLE_CLOUD_CREDENTIALS: str = Field(default="", env="GOOGLE_CLOUD_CREDENTIALS")
     
     # Model Settings
-    DEFAULT_MODEL: str = Field(default="mock")
+    DEFAULT_MODEL: str = Field(default="mock")  # Will be dynamically set by intelligent selection
     CONFIDENCE_THRESHOLD: float = Field(default=0.1)
+    MODEL_STORAGE_PATH: str = Field(default="models", env="MODEL_STORAGE_PATH")
     
     # Security Settings
     SECRET_KEY: str = Field(

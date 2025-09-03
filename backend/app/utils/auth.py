@@ -164,3 +164,16 @@ def refresh_access_token(db: Session, refresh_token: str) -> Optional[tuple[str,
     db.commit()
     
     return new_access_token, new_refresh_token
+
+def get_api_key_info(api_key: str) -> Dict[str, Any]:
+    """
+    Get API key information for billing/monetization.
+    TODO: Implement proper API key validation and rate limiting.
+    """
+    # Temporary implementation for development
+    return {
+        "user_id": "demo_user",
+        "tier": "free",
+        "requests_remaining": 1000,
+        "valid": True
+    }

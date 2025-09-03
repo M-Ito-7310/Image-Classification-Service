@@ -18,7 +18,7 @@ class CreateWorkspaceRequest(BaseModel):
     settings: Optional[Dict[str, Any]] = Field(default=None)
     
     class Config:
-        schema_extra = {
+        json_schema_extra = {
             "example": {
                 "name": "AI Research Team",
                 "description": "Collaborative workspace for AI research projects and image classification experiments",
@@ -35,11 +35,11 @@ class CreateProjectRequest(BaseModel):
     """Request model for creating project."""
     name: str = Field(..., min_length=1, max_length=100)
     description: str = Field(..., min_length=1, max_length=500)
-    project_type: str = Field(default="classification", regex="^(classification|detection|segmentation|custom)$")
+    project_type: str = Field(default="classification", pattern="^(classification|detection|segmentation|custom)$")
     settings: Optional[Dict[str, Any]] = Field(default=None)
     
     class Config:
-        schema_extra = {
+        json_schema_extra = {
             "example": {
                 "name": "Plant Species Classification",
                 "description": "Project to classify different plant species using custom datasets",

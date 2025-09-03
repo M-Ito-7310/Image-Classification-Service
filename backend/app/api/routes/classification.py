@@ -205,8 +205,24 @@ async def list_available_models() -> Dict[str, Any]:
     """
     List all available classification models.
     """
+    models_list = await classification_service.list_models()
+    
+    # Transform to expected format with status field
+    available_models = []
+    for model in models_list:
+        available_models.append({
+            "name": model["name"],
+            "description": model["description"], 
+            "version": model.get("version", "1.0"),
+            "classes": len(model.get("classes", [])) if isinstance(model.get("classes"), list) else 1000,
+            "status": "active",
+            "accuracy": model.get("accuracy"),
+            "inference_time": model.get("inference_time", 50),
+            "provider": model.get("provider", "tensorflow")
+        })
+    
     return {
-        "models": await classification_service.list_models(),
+        "available_models": available_models,
         "default_model": settings.DEFAULT_MODEL
     }
 
