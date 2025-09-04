@@ -57,7 +57,7 @@ export default {
     features: {
       upload: {
         title: '簡単アップロード',
-        description: 'ドラッグ&ドロップまたはクリックで画像を簡単にアップロード。複数ファイルの一括処理にも対応。'
+        description: 'ドラッグ&ドロップまたはクリックで画像を簡単にアップロード。'
       },
       analysis: {
         title: '高精度AI分析',
@@ -283,6 +283,7 @@ export default {
       analyzingImages: '{count}個の画像を分析中...',
       options: '分類オプション',
       selectedFiles: '選択されたファイル',
+      selectedFile: '選択されたファイル',
       removeAll: '全て削除',
       totalSize: '総サイズ',
       model: '使用モデル',
@@ -294,14 +295,6 @@ export default {
       supportedFormatsOptimized: '対応形式: JPEG, PNG, WebP, BMP • 最適化により高速処理',
       unsupportedFilesError: '{count}個のファイルは対応していない形式または大きすぎるため追加されませんでした',
       modelLabel: '使用モデル'
-    },
-    batch: {
-      title: 'バッチ処理',
-      selectFiles: 'ファイルを選択',
-      processing: '{current}/{total} 処理中',
-      completed: '完了',
-      failed: '失敗',
-      results: 'バッチ結果'
     },
     models: {
       select: 'モデルを選択',
@@ -325,7 +318,6 @@ export default {
           description: '画像ファイルをアップロードして分析を開始します',
           method1: 'ドラッグ&ドロップ：画像ファイルをアップロードエリアにドラッグしてドロップ',
           method2: 'クリック選択：「ファイルを選択」ボタンをクリックしてファイルブラウザから選択',
-          method3: '複数ファイル：Ctrl/Cmdキーを押しながら複数の画像を選択して一括アップロード'
         },
         options: {
           title: '分類オプションの設定',
@@ -671,10 +663,6 @@ export default {
       formats: {
         title: '多様な対応形式',
         description: 'JPEG、PNG、WebP、BMPなど主要な画像形式に対応し、最大10MBまでのファイルを処理できます。'
-      },
-      batch: {
-        title: 'バッチ処理対応',
-        description: '複数画像の一括処理に対応し、効率的な大量画像の分析が可能です。プログレスバーでリアルタイム進捗確認も可能です。'
       },
       enterprise: {
         title: 'エンタープライズ機能',

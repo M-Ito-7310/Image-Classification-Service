@@ -26,88 +26,34 @@
         </div>
       </div>
 
-      <!-- Tab Navigation -->
+      <!-- Upload Section -->
       <div class="mb-8">
-        <div class="border-b border-gray-200 dark:border-gray-700">
-          <nav class="-mb-px flex space-x-8">
-            <button
-              @click="activeTab = 'single'"
-              :class="[
-                'py-2 px-1 border-b-2 font-medium text-sm transition-colors',
-                activeTab === 'single'
-                  ? 'border-primary-500 text-primary-600 dark:text-primary-400'
-                  : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 dark:text-gray-400 dark:hover:text-gray-300'
-              ]"
-            >
-              単体分類
-            </button>
-            <button
-              @click="activeTab = 'batch'"
-              :class="[
-                'py-2 px-1 border-b-2 font-medium text-sm transition-colors',
-                activeTab === 'batch'
-                  ? 'border-primary-500 text-primary-600 dark:text-primary-400'
-                  : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 dark:text-gray-400 dark:hover:text-gray-300'
-              ]"
-            >
-              バッチ処理
-            </button>
-            <button
-              @click="activeTab = 'webcam'"
-              :class="[
-                'py-2 px-1 border-b-2 font-medium text-sm transition-colors',
-                activeTab === 'webcam'
-                  ? 'border-primary-500 text-primary-600 dark:text-primary-400'
-                  : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 dark:text-gray-400 dark:hover:text-gray-300'
-              ]"
-            >
-              ウェブカメラ
-            </button>
-          </nav>
-        </div>
+        <ImageUpload @upload-complete="handleUploadComplete" />
       </div>
 
-      <!-- Single Classification Tab -->
-      <div v-if="activeTab === 'single'">
-        <!-- Upload Section -->
-        <div class="mb-8">
-          <ImageUpload @upload-complete="handleUploadComplete" />
-        </div>
+      <!-- Results Section -->
+      <div v-if="hasResults">
+        <ClassificationResults />
+      </div>
 
-        <!-- Results Section -->
-        <div v-if="hasResults">
-          <ClassificationResults />
-        </div>
-
-        <!-- Empty State -->
-        <div v-else class="text-center py-16">
-          <div class="max-w-md mx-auto">
-            <div class="mb-6">
-              <svg class="mx-auto w-24 h-24 text-gray-300 dark:text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
-              </svg>
-            </div>
-            <h2 class="text-xl font-semibold text-gray-900 dark:text-white mb-2">
-              {{ t('classification.emptyState.title') }}
-            </h2>
-            <p class="text-gray-600 dark:text-gray-400 mb-6">
-              {{ t('classification.emptyState.description') }}
-            </p>
-            <div class="text-sm text-gray-500 dark:text-gray-400">
-              {{ t('classification.emptyState.supportedFormats') }}
-            </div>
+      <!-- Empty State -->
+      <div v-else class="text-center py-16">
+        <div class="max-w-md mx-auto">
+          <div class="mb-6">
+            <svg class="mx-auto w-24 h-24 text-gray-300 dark:text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+            </svg>
+          </div>
+          <h2 class="text-xl font-semibold text-gray-900 dark:text-white mb-2">
+            {{ t('classification.emptyState.title') }}
+          </h2>
+          <p class="text-gray-600 dark:text-gray-400 mb-6">
+            {{ t('classification.emptyState.description') }}
+          </p>
+          <div class="text-sm text-gray-500 dark:text-gray-400">
+            {{ t('classification.emptyState.supportedFormats') }}
           </div>
         </div>
-      </div>
-
-      <!-- Batch Classification Tab -->
-      <div v-if="activeTab === 'batch'">
-        <BatchClassification />
-      </div>
-
-      <!-- Webcam Classification Tab -->
-      <div v-if="activeTab === 'webcam'">
-        <WebcamCapture />
       </div>
     </div>
 
@@ -126,8 +72,6 @@ import { useClassificationStore } from '@/stores/classification'
 import { ImageUpload } from '@/components/Upload'
 import { ClassificationResults } from '@/components/Results'
 import { HowToGuide } from '@/components/Guide'
-import BatchClassification from '@/components/Batch/BatchClassification.vue'
-import WebcamCapture from '@/components/Camera/WebcamCapture.vue'
 import type { ClassificationResult } from '@/types/api'
 
 // Stores and i18n
@@ -136,7 +80,6 @@ const classificationStore = useClassificationStore()
 
 // State
 const showGuide = ref(false)
-const activeTab = ref<'single' | 'batch' | 'webcam'>('single')
 
 // Computed
 const hasResults = computed(() => classificationStore.hasResults)

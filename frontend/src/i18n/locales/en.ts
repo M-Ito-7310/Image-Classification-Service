@@ -57,7 +57,7 @@ export default {
     features: {
       upload: {
         title: 'Easy Upload',
-        description: 'Simple drag & drop or click to upload images. Support for batch processing of multiple files.'
+        description: 'Simple drag & drop or click to upload images.'
       },
       analysis: {
         title: 'High-Precision AI Analysis',
@@ -283,6 +283,7 @@ export default {
       analyzingImages: 'Analyzing {count} images...',
       options: 'Classification Options',
       selectedFiles: 'Selected Files',
+      selectedFile: 'Selected File',
       removeAll: 'Remove All',
       totalSize: 'Total Size',
       model: 'Model',
@@ -294,14 +295,6 @@ export default {
       supportedFormatsOptimized: 'Supported formats: JPEG, PNG, WebP, BMP • Optimized for fast processing',
       unsupportedFilesError: '{count} files were not added due to unsupported format or size',
       modelLabel: 'Model Used'
-    },
-    batch: {
-      title: 'Batch Processing',
-      selectFiles: 'Select Files',
-      processing: 'Processing {current}/{total}',
-      completed: 'Completed',
-      failed: 'Failed',
-      results: 'Batch Results'
     },
     models: {
       select: 'Select Model',
@@ -325,7 +318,6 @@ export default {
           description: 'Upload image files to start the AI analysis process',
           method1: 'Drag & Drop: Drag image files and drop them onto the upload area',
           method2: 'Click Selection: Click "Choose File" button to select from file browser',
-          method3: 'Multiple Files: Hold Ctrl/Cmd and select multiple images for batch upload'
         },
         options: {
           title: 'Configure Classification Options',
@@ -671,10 +663,6 @@ export default {
       formats: {
         title: 'Multiple Format Support',
         description: 'Supports major image formats including JPEG, PNG, WebP, BMP, and can process files up to 10MB in size.'
-      },
-      batch: {
-        title: 'Batch Processing Support',
-        description: 'Supports bulk processing of multiple images for efficient analysis of large image sets. Real-time progress tracking available with progress bars.'
       },
       enterprise: {
         title: 'Enterprise Features',

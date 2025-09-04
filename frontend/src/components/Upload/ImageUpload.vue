@@ -51,7 +51,6 @@
       <input
         ref="fileInput"
         type="file"
-        multiple
         accept="image/*"
         class="hidden"
         @change="handleFileSelect"
@@ -89,7 +88,7 @@
     <div v-if="hasFiles" class="space-y-4">
       <div class="flex items-center justify-between">
         <h4 class="text-lg font-semibold text-gray-900 dark:text-white">
-          {{ t('classification.upload.selectedFiles') }} ({{ files.length }})
+          {{ t('classification.upload.selectedFile') }}
         </h4>
         <button
           @click="clearAllFiles"
@@ -301,7 +300,8 @@ const handleDrop = (e: DragEvent) => {
 
   const droppedFiles = e.dataTransfer?.files
   if (droppedFiles && droppedFiles.length > 0) {
-    addFiles(droppedFiles)
+    // Only accept the first file since we removed batch processing
+    addFiles([droppedFiles[0]])
   }
 }
 
@@ -315,7 +315,8 @@ const triggerFileInput = () => {
 const handleFileSelect = (e: Event) => {
   const target = e.target as HTMLInputElement
   if (target.files && target.files.length > 0) {
-    addFiles(target.files)
+    // Only accept the first file since we removed batch processing
+    addFiles([target.files[0]])
     target.value = '' // Reset input to allow selecting same files again
   }
 }
@@ -375,23 +376,12 @@ const startUpload = async () => {
       enhance_image: enhanceImage.value
     }
 
-    let results
-    if (files.value.length === 1) {
-      // Single file upload
-      results = [await classificationApi.classifyImage(
-        files.value[0],
-        options,
-        (progress) => uploadStore.setUploadProgress(progress)
-      )]
-    } else {
-      // Batch upload
-      const batchResults = await classificationApi.classifyImages(
-        files.value,
-        options,
-        (progress) => uploadStore.setUploadProgress(progress)
-      )
-      results = batchResults
-    }
+    // Single file upload only
+    const results = [await classificationApi.classifyImage(
+      files.value[0],
+      options,
+      (progress) => uploadStore.setUploadProgress(progress)
+    )]
 
     // Store results
     uploadStore.setResults(results)

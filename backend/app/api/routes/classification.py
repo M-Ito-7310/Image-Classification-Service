@@ -20,7 +20,6 @@ from app.services.security_service import security_service
 from app.schemas.classification import (
     ClassificationResponse,
     ClassificationRequest,
-    BatchClassificationResponse,
     ImageMetadata
 )
 
@@ -254,74 +253,6 @@ async def classify_image(
             detail=f"Classification failed: {str(e)}"
         )
 
-@router.post("/classify/batch", response_model=BatchClassificationResponse)
-async def classify_images_batch(
-    files: List[UploadFile] = File(..., description="Multiple image files to classify"),
-    current_user: Optional[User] = Depends(get_current_user_optional),
-    db: Session = Depends(get_db)
-) -> BatchClassificationResponse:
-    """
-    Classify multiple uploaded images in batch.
-    
-    Args:
-        files: List of uploaded image files
-        
-    Returns:
-        Batch classification results
-    """
-    print(f"\n=== BATCH CLASSIFICATION REQUEST ===")
-    print(f"Number of files received: {len(files)}")
-    for i, file in enumerate(files):
-        print(f"File {i+1}: {file.filename}")
-    
-    if len(files) > 10:  # Limit batch size
-        raise HTTPException(
-            status_code=400,
-            detail="Maximum 10 files allowed per batch"
-        )
-    
-    batch_id = str(uuid.uuid4())
-    results = []
-    errors = []
-    
-    for file in files:
-        try:
-            # Reset file pointer to ensure file can be read
-            await file.seek(0)
-            
-            # Classify each file individually
-            result = await classify_image(file, current_user, db)
-            results.append(result)
-            print(f"Successfully processed {file.filename}, total results so far: {len(results)}")
-        except HTTPException as e:
-            print(f"Error processing {file.filename}: {e.detail}")
-            errors.append({
-                "filename": file.filename,
-                "error": e.detail,
-                "status_code": e.status_code
-            })
-        except Exception as e:
-            print(f"Unexpected error processing {file.filename}: {str(e)}")
-            errors.append({
-                "filename": file.filename,
-                "error": f"Unexpected error: {str(e)}",
-                "status_code": 500
-            })
-    
-    print(f"Batch processing complete: {len(results)} successful, {len(errors)} errors")
-    
-    batch_response = BatchClassificationResponse(
-        batch_id=batch_id,
-        total_files=len(files),
-        successful_classifications=len(results),
-        failed_classifications=len(errors),
-        results=results,
-        errors=errors,
-        timestamp=datetime.utcnow()
-    )
-    
-    print(f"Returning batch response with {len(batch_response.results)} results")
-    return batch_response
 
 @router.get("/models")
 async def list_available_models() -> Dict[str, Any]:

@@ -40,15 +40,6 @@ class ClassificationResponse(BaseModel):
     image_url: Optional[str] = Field(default=None, description="URL to access the uploaded image")
     image_metadata: Optional[ImageMetadata] = Field(default=None, description="Image metadata information")
 
-class BatchClassificationResponse(BaseModel):
-    """Response model for batch image classification."""
-    batch_id: str = Field(description="Unique identifier for this batch")
-    total_files: int = Field(description="Total number of files in batch")
-    successful_classifications: int = Field(description="Number of successful classifications")
-    failed_classifications: int = Field(description="Number of failed classifications")
-    results: List[ClassificationResponse] = Field(description="Successful classification results")
-    errors: List[Dict[str, Any]] = Field(description="Error details for failed classifications")
-    timestamp: datetime = Field(description="Batch processing timestamp")
 
 class ModelInfo(BaseModel):
     """Information about a classification model."""

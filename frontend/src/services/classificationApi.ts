@@ -112,57 +112,6 @@ class ClassificationApiService {
     }
   }
 
-  // Classify multiple images (batch processing)
-  async classifyImages(
-    files: File[],
-    options: UploadOptions = {},
-    onProgress?: (progress: number) => void
-  ): Promise<ClassificationResult[]> {
-    try {
-      // Validate all files
-      files.forEach(file => this.validateImageFile(file))
-      
-      dispatchLoading(true, `${files.length}個の画像を分析中...`)
-
-      const uploadOptions = {
-        model: options.model || 'default',
-        threshold: options.threshold || 0.5,
-        max_results: options.max_results || 5,
-        language: options.language || i18n.global.locale.value as 'ja' | 'en',
-      }
-
-      console.log(`=== BATCH API CALL ===`)
-      console.log(`Uploading ${files.length} files:`, files.map(f => f.name))
-      
-      const response = await apiService.uploadFiles<{ results: ClassificationResult[] }>(
-        '/api/v1/classify/batch',
-        files,
-        uploadOptions,
-        onProgress
-      )
-
-      console.log('=== BATCH API RESPONSE ===')
-      console.log('Full response:', response)
-      console.log('Results count:', response.results?.length || 0)
-      console.log('Results array:', response.results)
-
-      window.dispatchEvent(new CustomEvent('app:toast', {
-        detail: {
-          type: 'success',
-          title: 'バッチ処理完了',
-          message: `${files.length}個の画像の分類が完了しました`
-        }
-      }))
-
-      return response.results
-    } catch (error) {
-      const httpError = error as HttpError
-      dispatchApiError(httpError)
-      throw error
-    } finally {
-      dispatchLoading(false)
-    }
-  }
 
   // Get classification history (for future implementation)
   async getHistory(limit = 20, offset = 0): Promise<HistoryResponse> {
