@@ -89,9 +89,9 @@
 
           <!-- Status Badges -->
           <div class="flex items-center space-x-3">
-            <span class="badge badge-success">Phase 8 Complete</span>
-            <span class="badge badge-info">Enterprise Ready</span>
-            <span class="badge badge-primary">v2.0.0</span>
+            <span class="badge badge-success">Production Ready</span>
+            <span class="badge badge-info">Core System</span>
+            <span class="badge badge-primary">v1.0.0</span>
           </div>
         </div>
       </div>

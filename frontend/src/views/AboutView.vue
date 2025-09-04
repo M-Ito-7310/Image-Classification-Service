@@ -123,6 +123,10 @@
                   <span>{{ t('about.techStack.tensorflow') }}</span>
                 </div>
                 <div class="flex items-center text-sm text-gray-600 dark:text-gray-400">
+                  <span class="w-24 flex-shrink-0">PostgreSQL</span>
+                  <span>{{ t('about.techStack.postgresql') }}</span>
+                </div>
+                <div class="flex items-center text-sm text-gray-600 dark:text-gray-400">
                   <span class="w-24 flex-shrink-0">Docker</span>
                   <span>{{ t('about.techStack.docker') }}</span>
                 </div>
@@ -140,19 +144,19 @@
           <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             <div class="text-center">
               <div class="text-3xl font-bold text-primary-600 dark:text-primary-400 mb-2">
-                99.2%
+                {{ t('home.stats.aiAnalysis') }}
               </div>
               <div class="text-sm font-medium text-gray-900 dark:text-white mb-1">
                 {{ t('about.performance.accuracy') }}
               </div>
               <div class="text-xs text-gray-600 dark:text-gray-400">
-                Top-1 Accuracy
+                TensorFlow/PyTorch
               </div>
             </div>
 
             <div class="text-center">
               <div class="text-3xl font-bold text-secondary-600 dark:text-secondary-400 mb-2">
-                &lt;500ms
+                {{ t('home.stats.speedValue') }}
               </div>
               <div class="text-sm font-medium text-gray-900 dark:text-white mb-1">
                 {{ t('about.performance.processingTime') }}
@@ -164,19 +168,19 @@
 
             <div class="text-center">
               <div class="text-3xl font-bold text-success-600 dark:text-success-400 mb-2">
-                1000+
+                {{ t('home.stats.multipleFormats') }}
               </div>
               <div class="text-sm font-medium text-gray-900 dark:text-white mb-1">
-                {{ t('about.performance.supportedClasses') }}
+                {{ t('about.performance.supportedFormats') }}
               </div>
               <div class="text-xs text-gray-600 dark:text-gray-400">
-                {{ t('about.performance.classesNote') }}
+                JPEG, PNG, WebP, BMP
               </div>
             </div>
 
             <div class="text-center">
               <div class="text-3xl font-bold text-warning-600 dark:text-warning-400 mb-2">
-                10MB
+                {{ t('home.stats.maxSizeValue') }}
               </div>
               <div class="text-sm font-medium text-gray-900 dark:text-white mb-1">
                 {{ t('about.performance.maxFileSize') }}

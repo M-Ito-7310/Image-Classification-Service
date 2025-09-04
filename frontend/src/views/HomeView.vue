@@ -26,16 +26,16 @@
         <!-- Quick Stats -->
         <div class="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-2xl mx-auto mb-12">
           <div class="glass rounded-lg p-4">
-            <div class="text-2xl font-bold text-primary-600 dark:text-primary-400">99.2%</div>
+            <div class="text-2xl font-bold text-primary-600 dark:text-primary-400">{{ t('home.stats.aiAnalysis') }}</div>
             <div class="text-sm text-gray-600 dark:text-gray-400">{{ t('home.stats.accuracy') }}</div>
           </div>
           <div class="glass rounded-lg p-4">
-            <div class="text-2xl font-bold text-primary-600 dark:text-primary-400">&lt;500ms</div>
+            <div class="text-2xl font-bold text-primary-600 dark:text-primary-400">{{ t('home.stats.speedValue') }}</div>
             <div class="text-sm text-gray-600 dark:text-gray-400">{{ t('home.stats.speed') }}</div>
           </div>
           <div class="glass rounded-lg p-4">
-            <div class="text-2xl font-bold text-primary-600 dark:text-primary-400">1000+</div>
-            <div class="text-sm text-gray-600 dark:text-gray-400">{{ t('home.stats.classes') }}</div>
+            <div class="text-2xl font-bold text-primary-600 dark:text-primary-400">{{ t('home.stats.maxSizeValue') }}</div>
+            <div class="text-sm text-gray-600 dark:text-gray-400">{{ t('home.stats.maxSize') }}</div>
           </div>
         </div>
       </div>
@@ -145,48 +145,48 @@
           </p>
         </div>
 
-        <!-- Feature 7: Enterprise Collaboration -->
+        <!-- Feature 7: User Authentication -->
         <div class="glass rounded-xl p-6 text-center hover:shadow-lg transition-all duration-200">
           <div class="w-12 h-12 bg-indigo-100 dark:bg-indigo-900/30 rounded-lg flex items-center justify-center mx-auto mb-4">
             <svg class="w-6 h-6 text-indigo-600 dark:text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
             </svg>
           </div>
           <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-2">
-            {{ t('home.features.collaboration.title') }}
+            {{ t('home.features.authentication.title') }}
           </h3>
           <p class="text-gray-600 dark:text-gray-400 text-sm">
-            {{ t('home.features.collaboration.description') }}
+            {{ t('home.features.authentication.description') }}
           </p>
         </div>
 
-        <!-- Feature 8: API Marketplace -->
+        <!-- Feature 8: Model Management -->
         <div class="glass rounded-xl p-6 text-center hover:shadow-lg transition-all duration-200">
           <div class="w-12 h-12 bg-emerald-100 dark:bg-emerald-900/30 rounded-lg flex items-center justify-center mx-auto mb-4">
             <svg class="w-6 h-6 text-emerald-600 dark:text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 3v2m6-2v2M9 19v2m6-2v2M5 9H3m2 6H3m18-6h-2m2 6h-2M7 19h10a2 2 0 002-2V7a2 2 0 00-2-2H7a2 2 0 00-2 2v10a2 2 0 002 2zM9 9h6v6H9V9z" />
             </svg>
           </div>
           <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-2">
-            {{ t('home.features.marketplace.title') }}
+            {{ t('home.features.modelManagement.title') }}
           </h3>
           <p class="text-gray-600 dark:text-gray-400 text-sm">
-            {{ t('home.features.marketplace.description') }}
+            {{ t('home.features.modelManagement.description') }}
           </p>
         </div>
 
-        <!-- Feature 9: Multi-modal Processing -->
+        <!-- Feature 9: History Tracking -->
         <div class="glass rounded-xl p-6 text-center hover:shadow-lg transition-all duration-200">
           <div class="w-12 h-12 bg-rose-100 dark:bg-rose-900/30 rounded-lg flex items-center justify-center mx-auto mb-4">
             <svg class="w-6 h-6 text-rose-600 dark:text-rose-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" />
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
             </svg>
           </div>
           <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-2">
-            {{ t('home.features.multimodal.title') }}
+            {{ t('home.features.history.title') }}
           </h3>
           <p class="text-gray-600 dark:text-gray-400 text-sm">
-            {{ t('home.features.multimodal.description') }}
+            {{ t('home.features.history.description') }}
           </p>
         </div>
       </div>
@@ -258,9 +258,9 @@
           </div>
           
           <div class="text-center">
-            <div class="text-lg font-semibold text-gray-900 dark:text-white mb-2">{{ t('home.specs.concurrent') }}</div>
+            <div class="text-lg font-semibold text-gray-900 dark:text-white mb-2">{{ t('home.specs.processing') }}</div>
             <div class="text-sm text-gray-600 dark:text-gray-400">
-              {{ t('home.specs.concurrentValue') }}
+              {{ t('home.specs.processingValue') }}
             </div>
           </div>
           

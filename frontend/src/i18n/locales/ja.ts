@@ -52,7 +52,11 @@ export default {
     stats: {
       accuracy: '分類精度',
       speed: '処理時間',
-      classes: '対応クラス'
+      maxSize: '最大ファイルサイズ',
+      aiAnalysis: 'AI分析',
+      multipleFormats: '複数形式',
+      speedValue: '<3秒',
+      maxSizeValue: '10MB'
     },
     features: {
       upload: {
@@ -87,9 +91,17 @@ export default {
         title: 'APIマーケットプレイス',
         description: '包括的なマーケットプレイスプラットフォームを通じてAIモデルを発見・収益化。'
       },
-      multimodal: {
-        title: 'マルチモーダル処理',
-        description: 'ストリーミング機能付きの高度な動画・音声・統合メディア分類。'
+      authentication: {
+        title: 'ユーザー認証',
+        description: 'JWT認証によるセキュアなログイン。個人設定と分類履歴の管理機能付き。'
+      },
+      modelManagement: {
+        title: 'モデル管理',
+        description: 'カスタムAIモデルのアップロード、検証、管理。TensorFlowとPyTorch形式に対応。'
+      },
+      history: {
+        title: '履歴追跡',
+        description: '分類結果の保存と履歴管理。過去の分析結果を検索・エクスポート可能。'
       }
     },
     howTo: {
@@ -111,12 +123,12 @@ export default {
       title: '技術仕様',
       formats: '対応形式',
       maxSize: '最大ファイルサイズ',
-      concurrent: '同時アップロード',
+      processing: '処理方式',
       speed: '処理速度',
       formatsValue: 'JPEG, PNG, WebP, BMP',
       maxSizeValue: '10MB',
-      concurrentValue: '最大50ファイル',
-      speedValue: '平均500ms以下'
+      processingValue: '単一画像処理',
+      speedValue: '平均3秒以内'
     }
   },
   
@@ -684,13 +696,14 @@ export default {
       fastapi: '高性能WebAPIフレームワーク',
       python: '機械学習向けプログラミング言語',
       tensorflow: '深層学習フレームワーク',
+      postgresql: 'リレーショナルデータベース',
       docker: 'コンテナ化技術'
     },
     performance: {
       title: 'パフォーマンス指標',
       accuracy: '分類精度',
       processingTime: '処理時間',
-      supportedClasses: '対応クラス',
+      supportedFormats: '対応形式',
       maxFileSize: '最大ファイルサイズ',
       accuracyNote: 'Top-1 Accuracy',
       timeNote: '平均応答時間',

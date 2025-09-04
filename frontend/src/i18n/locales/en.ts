@@ -52,7 +52,11 @@ export default {
     stats: {
       accuracy: 'Classification Accuracy',
       speed: 'Processing Time',
-      classes: 'Supported Classes'
+      maxSize: 'Max File Size',
+      aiAnalysis: 'AI Analysis',
+      multipleFormats: 'Multiple Formats',
+      speedValue: '<3 sec',
+      maxSizeValue: '10MB'
     },
     features: {
       upload: {
@@ -79,17 +83,17 @@ export default {
         title: 'Export Results',
         description: 'Export classification results in JSON or CSV format for data analysis and reporting.'
       },
-      collaboration: {
-        title: 'Enterprise Collaboration',
-        description: 'Team workspaces, project sharing, and collaborative model development for enterprise workflows.'
+      authentication: {
+        title: 'User Authentication',
+        description: 'Secure JWT-based login system with personal settings and classification history management.'
       },
-      marketplace: {
-        title: 'API Marketplace',
-        description: 'Discover and monetize AI models through our comprehensive marketplace platform.'
+      modelManagement: {
+        title: 'Model Management',
+        description: 'Upload, validate, and manage custom AI models. Supports TensorFlow and PyTorch formats.'
       },
-      multimodal: {
-        title: 'Multi-modal Processing',
-        description: 'Advanced video, audio, and combined media classification with streaming capabilities.'
+      history: {
+        title: 'History Tracking',
+        description: 'Save and manage classification results. Search and export past analysis data.'
       }
     },
     howTo: {
@@ -111,12 +115,12 @@ export default {
       title: 'Technical Specifications',
       formats: 'Supported Formats',
       maxSize: 'Max File Size',
-      concurrent: 'Concurrent Upload',
+      processing: 'Processing Method',
       speed: 'Processing Speed',
       formatsValue: 'JPEG, PNG, WebP, BMP',
       maxSizeValue: '10MB',
-      concurrentValue: 'Up to 50 files',
-      speedValue: 'Average <500ms'
+      processingValue: 'Single Image Processing',
+      speedValue: 'Average <3 seconds'
     }
   },
   
@@ -684,13 +688,14 @@ export default {
       fastapi: 'High-performance Web API framework',
       python: 'Programming language for machine learning',
       tensorflow: 'Deep learning framework',
+      postgresql: 'Relational database system',
       docker: 'Containerization technology'
     },
     performance: {
       title: 'Performance Metrics',
       accuracy: 'Classification Accuracy',
       processingTime: 'Processing Time',
-      supportedClasses: 'Supported Classes',
+      supportedFormats: 'Supported Formats',
       maxFileSize: 'Max File Size',
       accuracyNote: 'Top-1 Accuracy',
       timeNote: 'Average Response Time',
