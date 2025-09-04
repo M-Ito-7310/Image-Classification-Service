@@ -211,7 +211,7 @@
               </a>
               
               <a
-                href="https://github.com/example/image-classification-service/issues"
+                href="https://github.com/M-Ito-7310/Image-Classification-Service/issues"
                 class="inline-flex items-center text-primary-600 dark:text-primary-400 hover:text-primary-700 dark:hover:text-primary-300 transition-colors"
                 target="_blank"
                 rel="noopener noreferrer"
