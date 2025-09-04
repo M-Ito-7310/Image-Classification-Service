@@ -29,8 +29,11 @@ router = APIRouter()
 logger = logging.getLogger(__name__)
 
 # Initialize services
+logger.info("Initializing image service...")
 image_service = ImageService()
+logger.info("Initializing classification service...")
 classification_service = ClassificationService()
+logger.info("Services initialized successfully")
 
 @router.post("/classify", response_model=ClassificationResponse)
 async def classify_image(
@@ -47,6 +50,10 @@ async def classify_image(
     Returns:
         Classification results with confidence scores
     """
+    print(f"\n=== CLASSIFICATION REQUEST STARTED ===")
+    print(f"File: {file.filename}")
+    print(f"User: {current_user.id if current_user else 'Anonymous'}")
+    
     try:
         # Read file content for validation
         content = await file.read()
@@ -93,61 +100,127 @@ async def classify_image(
         filename = f"{file_id}{file_extension}"
         file_path = Path(settings.UPLOAD_DIR) / filename
         
-        # Save file
+        # Save file (using content we already read)
         with open(file_path, "wb") as buffer:
-            shutil.copyfileobj(file.file, buffer)
+            buffer.write(content)
         
         # Process image
+        logger.info("Processing image...")
         processed_image = await image_service.process_image(file_path)
+        logger.info(f"Image processed successfully. Shape: {processed_image.shape}")
         
-        # Classify image (check if it's a custom model first)
-        model_name = "default"  # You can extend this to accept model parameter
+        # Classify image - let service use default model selection
+        # This will use the DEFAULT_MODEL setting or auto-select best available
+        logger.info("Starting classification...")
+        logger.info(f"Available models: {list(classification_service.models.keys())}")
+        logger.info(f"Using model: {classification_service.get_default_model()}")
         
-        # If user has custom models, they might want to use them
-        # This is a simple implementation - you can make it more sophisticated
         results = await classification_service.classify(
             processed_image, 
-            model_name=model_name
+            model_name=None,  # Use default model selection
+            confidence_threshold=0.01,  # Low threshold to show results
+            use_cache=False  # Disable cache to test fix
         )
+        logger.info("Classification completed")
+        
+        # Debug logging
+        logger.info(f"Classification service returned: {results}")
+        logger.info(f"Raw predictions: {results.get('predictions', [])}")
+        logger.info(f"Model used: {results.get('model_used', 'unknown')}")
+        
+        logger.debug("Starting response preparation...")
+        
+        # Extract predictions and confidence scores from service response
+        from app.schemas.classification import Prediction
+        
+        predictions_list = []
+        confidence_scores_dict = {}
+        
+        logger.info(f"Processing {len(results.get('predictions', []))} predictions")
+        
+        # Handle the prediction format from classification service
+        for i, pred_obj in enumerate(results.get("predictions", [])):
+            logger.debug(f"Processing prediction {i}: {pred_obj}")
+            if isinstance(pred_obj, dict):
+                class_name = pred_obj.get("class_name", "unknown")
+                confidence = pred_obj.get("confidence", 0.0)
+                class_id = pred_obj.get("class_id", str(i))
+                
+                # Create Prediction object for schema compliance
+                prediction = Prediction(
+                    class_name=class_name,
+                    confidence=confidence,
+                    class_id=class_id
+                )
+                predictions_list.append(prediction)
+                confidence_scores_dict[class_name] = confidence
+                logger.debug(f"Added: {class_name} = {confidence}")
+            else:
+                # Fallback for unexpected format
+                prediction = Prediction(
+                    class_name=str(pred_obj),
+                    confidence=0.0,
+                    class_id=str(i)
+                )
+                predictions_list.append(prediction)
+                logger.debug(f"Fallback for: {pred_obj}")
+        
+        logger.info(f"Generated {len(predictions_list)} prediction objects")
+        logger.debug(f"Confidence scores: {confidence_scores_dict}")
         
         # Save to history if user is authenticated
         if current_user:
-            # Get the highest confidence score
-            max_confidence = max(results["confidence_scores"]) if results["confidence_scores"] else 0.0
-            
-            # Prepare predictions for storage
-            predictions_data = []
-            for pred, conf in zip(results["predictions"], results["confidence_scores"]):
-                predictions_data.append({
-                    "class_name": pred,
-                    "confidence": conf
-                })
-            
-            # Create history record
-            history_record = ClassificationRecord(
-                user_id=current_user.id,
-                image_filename=file.filename,
-                image_path=str(file_path),
-                model_name=results["model_used"],
-                predictions=json.dumps(predictions_data),
-                processing_time=results["processing_time"],
-                confidence_score=str(max_confidence)
-            )
-            
-            db.add(history_record)
-            db.commit()
-            db.refresh(history_record)
+            logger.info("Saving to history for authenticated user...")
+            try:
+                # Get the highest confidence score
+                max_confidence = max(confidence_scores_dict.values()) if confidence_scores_dict else 0.0
+                
+                # Prepare predictions for storage (use original format from service)
+                predictions_data = results.get("predictions", [])
+                
+                logger.debug(f"Creating history record with max_confidence: {max_confidence}")
+                
+                # Create history record
+                history_record = ClassificationRecord(
+                    user_id=current_user.id,
+                    image_filename=file.filename,
+                    image_path=str(file_path),
+                    model_name=results["model_used"],
+                    predictions=json.dumps(predictions_data),
+                    processing_time=results["processing_time"],
+                    confidence_score=str(max_confidence)
+                )
+                
+                db.add(history_record)
+                db.commit()
+                db.refresh(history_record)
+                logger.info("History record saved successfully")
+            except Exception as e:
+                logger.error(f"Error saving history: {e}")
+                import traceback
+                traceback.print_exc()
+        else:
+            logger.debug("No user authenticated, skipping history save")
         
-        return ClassificationResponse(
-            id=file_id,
-            filename=file.filename,
-            predictions=results["predictions"],
-            confidence_scores=results["confidence_scores"],
-            processing_time=results["processing_time"],
-            model_used=results["model_used"],
-            timestamp=datetime.utcnow(),
-            image_url=f"/uploads/{filename}"
-        )
+        logger.debug("Creating response object...")
+        try:
+            response = ClassificationResponse(
+                id=file_id,
+                filename=file.filename,
+                predictions=predictions_list,
+                confidence_scores=confidence_scores_dict,
+                processing_time=results["processing_time"],
+                model_used=results["model_used"],
+                timestamp=datetime.utcnow(),
+                image_url=f"/uploads/{filename}"
+            )
+            logger.info(f"Classification successful: {len(predictions_list)} predictions, processing time: {results['processing_time']:.2f}s")
+            return response
+        except Exception as e:
+            logger.error(f"Error creating response: {e}")
+            import traceback
+            traceback.print_exc()
+            raise
         
     except Exception as e:
         # Clean up uploaded file if it exists

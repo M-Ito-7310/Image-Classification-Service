@@ -41,8 +41,8 @@ class Settings(BaseSettings):
     GOOGLE_CLOUD_CREDENTIALS: str = Field(default="", env="GOOGLE_CLOUD_CREDENTIALS")
     
     # Model Settings
-    DEFAULT_MODEL: str = Field(default="mock")  # Will be dynamically set by intelligent selection
-    CONFIDENCE_THRESHOLD: float = Field(default=0.1)
+    DEFAULT_MODEL: str = Field(default="auto")  # Will be dynamically set by intelligent selection
+    CONFIDENCE_THRESHOLD: float = Field(default=0.01)  # Lowered for testing
     MODEL_STORAGE_PATH: str = Field(default="models", env="MODEL_STORAGE_PATH")
     
     # Security Settings

@@ -21,38 +21,51 @@ UPLOAD_DIR.mkdir(exist_ok=True)
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     # Startup
-    print("Starting Image Classification Service...")
-    print(f"Upload directory: {UPLOAD_DIR.absolute()}")
+    # Initialize logging first
+    from app.core.logging_config import setup_logging
+    logger = setup_logging()
+    
+    logger.info("Starting Image Classification Service...")
+    logger.info(f"Upload directory: {UPLOAD_DIR.absolute()}")
     
     # Initialize database optimization
     try:
-        print("Optimizing database indexes...")
+        logger.info("Optimizing database indexes...")
         optimize_database()
-        print("Database optimization completed")
+        logger.info("Database optimization completed")
     except Exception as e:
-        print(f"Database optimization warning: {e}")
+        logger.warning(f"Database optimization warning: {e}")
     
     # Initialize cache service
     try:
-        print("Connecting to Redis cache...")
+        logger.info("Connecting to Redis cache...")
         await cache_service.connect()
-        print("Cache service initialized")
+        logger.info("Cache service initialized")
     except Exception as e:
-        print(f"Cache service warning: {e}")
+        logger.warning(f"Cache service warning: {e}")
     
     # Initialize ML models here if needed
+    logger.info("Initializing classification service at startup...")
+    try:
+        from app.services.classification_service import ClassificationService
+        classification_service = ClassificationService()
+        logger.info("Classification service initialized successfully at startup")
+    except Exception as e:
+        logger.error(f"Failed to initialize classification service at startup: {e}")
+        import traceback
+        traceback.print_exc()
     
     yield
     
     # Shutdown
-    print("Shutting down Image Classification Service...")
+    logger.info("Shutting down Image Classification Service...")
     
     # Cleanup cache connection
     try:
         await cache_service.disconnect()
-        print("Cache service disconnected")
+        logger.info("Cache service disconnected")
     except Exception as e:
-        print(f"Cache disconnect warning: {e}")
+        logger.warning(f"Cache disconnect warning: {e}")
 
 # Create FastAPI application
 app = FastAPI(

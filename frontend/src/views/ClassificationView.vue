@@ -144,5 +144,15 @@ const hasResults = computed(() => classificationStore.hasResults)
 // Methods
 const handleUploadComplete = (results: ClassificationResult[]) => {
   console.log('Upload completed with results:', results)
+  if (results && results.length > 0) {
+    const result = results[0]
+    console.log('First result details:')
+    console.log('  - predictions:', result.predictions)
+    console.log('  - confidence_scores:', result.confidence_scores)
+    console.log('  - model_used:', result.model_used)
+    console.log('  - processing_time:', result.processing_time)
+    console.log('  - predictions length:', result.predictions?.length || 0)
+    console.log('  - confidence_scores keys:', Object.keys(result.confidence_scores || {}))
+  }
 }
 </script>

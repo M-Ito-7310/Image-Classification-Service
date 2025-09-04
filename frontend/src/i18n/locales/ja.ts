@@ -703,7 +703,7 @@ export default {
           message: 'モデルの検証に失敗しました'
         }
       },
-      delete: {
+      deleteModel: {
         confirm: 'モデル「{name}」を削除してもよろしいですか？',
         success: {
           title: '削除完了',

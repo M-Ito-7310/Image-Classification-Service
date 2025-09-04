@@ -703,7 +703,7 @@ export default {
           message: 'Model validation failed'
         }
       },
-      delete: {
+      deleteModel: {
         confirm: 'Are you sure you want to delete model "{name}"?',
         success: {
           title: 'Deletion Complete',

@@ -3,6 +3,8 @@
 import os
 import hashlib
 import tempfile
+import time
+from datetime import datetime
 
 # Try to import magic, but handle Windows compatibility issues
 try:
@@ -165,7 +167,14 @@ class FileSecurityService:
                 tmp_file.flush()
                 
                 try:
-                    # Open and validate with PIL
+                    # First verify the image integrity (must be done first before any other operation)
+                    try:
+                        with Image.open(tmp_file.name) as img:
+                            img.verify()
+                    except Exception as e:
+                        result["errors"].append(f"Image verification failed: {e}")
+                    
+                    # Re-open for dimension and metadata checks
                     with Image.open(tmp_file.name) as img:
                         # Basic validation
                         if img.size[0] < 1 or img.size[1] < 1:
@@ -179,12 +188,6 @@ class FileSecurityService:
                             exif_data = img._getexif()
                             if exif_data and len(str(exif_data)) > 10000:
                                 result["warnings"].append("Large EXIF metadata detected")
-                        
-                        # Verify image can be processed
-                        try:
-                            img.verify()
-                        except Exception as e:
-                            result["errors"].append(f"Image verification failed: {e}")
                             
                 except Exception as e:
                     result["errors"].append(f"Image processing failed: {str(e)}")

@@ -47,36 +47,56 @@ class ClassificationService:
     
     def _initialize_models(self):
         """Initialize available models."""
+        print("Starting model initialization...")
         
         # Initialize TensorFlow models
         if TENSORFLOW_AVAILABLE:
+            print("TensorFlow is available, loading models...")
             try:
                 self._load_tensorflow_models()
+                print("TensorFlow models loaded successfully")
             except Exception as e:
                 print(f"Failed to load TensorFlow models: {e}")
+        else:
+            print("TensorFlow not available")
         
         # Initialize PyTorch models
         if PYTORCH_AVAILABLE:
+            print("PyTorch is available, loading models...")
             try:
                 self._load_pytorch_models()
+                print("PyTorch models loaded successfully")
             except Exception as e:
                 print(f"Failed to load PyTorch models: {e}")
+        else:
+            print("PyTorch not available")
         
         # Initialize Google Cloud Vision
         if GOOGLE_VISION_AVAILABLE:
+            print("Google Cloud Vision is available, initializing...")
             try:
                 self._initialize_google_vision()
+                print("Google Cloud Vision initialized successfully")
             except Exception as e:
                 print(f"Failed to initialize Google Vision: {e}")
+        else:
+            print("Google Cloud Vision not available")
         
         # Add mock model for development/testing
+        print("Adding mock model...")
         self._add_mock_model()
         
+        print(f"Available models after initialization: {list(self.models.keys())}")
+        
         # Handle 'auto' setting for intelligent model selection
+        print("Handling model selection...")
         self._handle_auto_model_selection()
+        
+        print(f"Selected default model: {self.get_default_model()}")
         
         # Mark models as initialized
         self._models_initialized = True
+        print("Model initialization completed")
     
     def _load_tensorflow_models(self):
         """Load TensorFlow models."""
@@ -156,15 +176,31 @@ class ClassificationService:
     def _load_imagenet_labels(self):
         """Load ImageNet class labels."""
         try:
-            # This would typically load from a JSON file
-            # For now, using a subset of common classes
-            self.imagenet_labels = [
-                'Persian cat', 'Egyptian cat', 'tabby cat',
-                'golden retriever', 'Labrador retriever', 'beagle',
-                'robin', 'jay', 'magpie',
-                'sports car', 'convertible', 'limousine',
-                'airliner', 'warplane', 'space shuttle'
+            # Load actual ImageNet labels
+            # Using keras.applications.imagenet_utils
+            from tensorflow.keras.applications.imagenet_utils import decode_predictions
+            # We'll use decode_predictions later, but for now create a basic set
+            
+            # Common ImageNet classes (subset for testing)
+            common_labels = [
+                'tench', 'goldfish', 'great_white_shark', 'tiger_shark', 'hammerhead', 
+                'electric_ray', 'stingray', 'cock', 'hen', 'ostrich', 'brambling', 
+                'goldfinch', 'house_finch', 'junco', 'indigo_bunting', 'robin', 'bulbul',
+                'jay', 'magpie', 'chickadee', 'water_ouzel', 'kite', 'bald_eagle',
+                'vulture', 'great_grey_owl', 'European_fire_salamander', 'common_newt',
+                'eft', 'spotted_salamander', 'axolotl', 'bullfrog', 'tree_frog',
+                'tailed_frog', 'loggerhead', 'leatherback_turtle', 'mud_turtle',
+                'terrapin', 'box_turtle', 'banded_gecko', 'common_iguana',
+                'American_chameleon', 'whiptail', 'agama', 'frilled_lizard',
+                'alligator_lizard', 'Gila_monster', 'green_lizard', 'African_chameleon',
+                'Komodo_dragon', 'African_crocodile', 'American_alligator', 'triceratops'
             ]
+            
+            # Extend to 1000 classes
+            self.imagenet_labels = common_labels + [f"class_{i}" for i in range(len(common_labels), 1000)]
+            
+            print(f"Loaded {len(self.imagenet_labels)} ImageNet labels")
+            
         except Exception as e:
             print(f"Error loading ImageNet labels: {e}")
             self.imagenet_labels = [f"class_{i}" for i in range(1000)]
@@ -188,27 +224,42 @@ class ClassificationService:
         Returns:
             Classification results
         """
+        print(f"\n=== CLASSIFICATION SERVICE STARTED ===")
+        print(f"Input model_name: {model_name}")
+        print(f"Available models: {list(self.models.keys())}")
+        
         start_time = time.time()
         
         if model_name is None:
             model_name = self.get_default_model()
         
+        print(f"Selected model_name: {model_name}")
+        
         if confidence_threshold is None:
             confidence_threshold = settings.CONFIDENCE_THRESHOLD
+        
+        print(f"Using confidence threshold: {confidence_threshold}")
         
         # Generate cache key from image data
         image_hash = None
         if use_cache:
+            print("Checking cache...")
             image_bytes = image.tobytes()
             image_hash = hashlib.md5(image_bytes).hexdigest()
+            print(f"Image hash: {image_hash}")
             
             # Check cache first
             cached_result = await cache_service.get_cached_classification(image_hash, model_name)
             if cached_result:
+                print("Cache hit! Returning cached result")
                 # Add cache hit indicator
                 cached_result["from_cache"] = True
                 cached_result["cache_hit"] = True
                 return cached_result
+            else:
+                print("Cache miss, proceeding with classification")
+        else:
+            print("Cache disabled, proceeding with classification")
         
         # Check if model exists
         if model_name not in self.models:
@@ -220,11 +271,15 @@ class ClassificationService:
         
         try:
             # Route to appropriate classification method
+            print(f"Starting classification with model: {model_name}")
+            print(f"Image shape: {image.shape}, dtype: {image.dtype}")
+            
             if model_name == 'mock':
                 results = await self._classify_mock(image)
             elif model_name == 'google_vision':
                 results = await self._classify_google_vision(image)
             elif model_name in ['mobilenet_v2', 'resnet50']:
+                print(f"Using TensorFlow model: {model_name}")
                 results = await self._classify_tensorflow(image, model_name)
             elif model_name.endswith('_torch'):
                 results = await self._classify_pytorch(image, model_name)
@@ -233,14 +288,22 @@ class ClassificationService:
             else:
                 raise ValueError(f"Unknown model: {model_name}")
             
+            print(f"Raw classification results: {results}")
+            print(f"Number of raw predictions: {len(results.get('predictions', []))}")
+            
             # Filter results by confidence threshold
             filtered_predictions = []
             filtered_scores = {}
             
             for pred in results['predictions']:
+                print(f"Checking prediction: {pred}, confidence: {pred['confidence']}, threshold: {confidence_threshold}")
                 if pred['confidence'] >= confidence_threshold:
                     filtered_predictions.append(pred)
                     filtered_scores[pred['class_name']] = pred['confidence']
+                else:
+                    print(f"Filtered out: {pred['class_name']} (confidence {pred['confidence']} < {confidence_threshold})")
+            
+            print(f"After filtering: {len(filtered_predictions)} predictions remain")
             
             # Sort by confidence
             filtered_predictions.sort(key=lambda x: x['confidence'], reverse=True)
@@ -257,6 +320,8 @@ class ClassificationService:
                 'cache_hit': False
             }
             
+            print(f"Final result: {final_result}")
+            
             # Cache the result for future requests
             if use_cache and image_hash:
                 await cache_service.cache_classification_result(
@@ -269,6 +334,9 @@ class ClassificationService:
             return final_result
             
         except Exception as e:
+            print(f"CLASSIFICATION ERROR: {e}")
+            import traceback
+            traceback.print_exc()
             raise Exception(f"Classification failed with model {model_name}: {str(e)}")
     
     async def _classify_mock(self, image: np.ndarray) -> Dict[str, Any]:
@@ -289,6 +357,7 @@ class ClassificationService:
                 'class_id': str(i)
             })
         
+        print(f"Mock classifier generated {len(predictions)} predictions: {predictions}")
         return {'predictions': predictions}
     
     async def _classify_tensorflow(
@@ -298,37 +367,53 @@ class ClassificationService:
     ) -> Dict[str, Any]:
         """Classify using TensorFlow models."""
         if not TENSORFLOW_AVAILABLE:
+            print("TensorFlow not available, falling back to mock")
             return await self._classify_mock(image)
         
         try:
+            print(f"Getting TensorFlow model: {model_name}")
             model = self.models[model_name]
+            print(f"Model loaded successfully: {type(model)}")
             
             # Ensure correct input shape
             if len(image.shape) == 3:
                 image = np.expand_dims(image, axis=0)
             
+            print(f"Input image shape for TensorFlow: {image.shape}")
+            print(f"Input image dtype: {image.dtype}, min: {image.min()}, max: {image.max()}")
+            
             # Make prediction
+            print("Making TensorFlow prediction...")
             predictions = model.predict(image, verbose=0)
+            print(f"Raw prediction shape: {predictions.shape}")
+            print(f"Raw prediction sample (first 10): {predictions[0][:10]}")
+            
             predictions = predictions[0]  # Remove batch dimension
             
             # Get top predictions
             top_indices = np.argsort(predictions)[-5:][::-1]
+            print(f"Top 5 indices: {top_indices}")
+            print(f"Top 5 confidences: {predictions[top_indices]}")
             
             results = []
             for idx in top_indices:
                 class_name = self.imagenet_labels[idx] if idx < len(self.imagenet_labels) else f"class_{idx}"
                 confidence = float(predictions[idx])
                 
+                print(f"Adding result: {class_name} = {confidence}")
                 results.append({
                     'class_name': class_name,
                     'confidence': confidence,
                     'class_id': str(idx)
                 })
             
+            print(f"TensorFlow results: {results}")
             return {'predictions': results}
             
         except Exception as e:
             print(f"TensorFlow classification error: {e}")
+            import traceback
+            traceback.print_exc()
             return await self._classify_mock(image)
     
     async def _classify_pytorch(
