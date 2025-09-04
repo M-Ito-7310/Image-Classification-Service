@@ -20,7 +20,8 @@ from app.services.security_service import security_service
 from app.schemas.classification import (
     ClassificationResponse,
     ClassificationRequest,
-    BatchClassificationResponse
+    BatchClassificationResponse,
+    ImageMetadata
 )
 
 router = APIRouter()
@@ -52,11 +53,14 @@ async def classify_image(
     """
     print(f"\n=== CLASSIFICATION REQUEST STARTED ===")
     print(f"File: {file.filename}")
-    print(f"User: {current_user.id if current_user else 'Anonymous'}")
+    print(f"User: {current_user.id if current_user and hasattr(current_user, 'id') else 'Anonymous'}")
     
     try:
         # Read file content for validation
         content = await file.read()
+        
+        # Reset file pointer for subsequent reads
+        await file.seek(0)
         
         # Comprehensive security validation
         validation_result = await security_service.validate_file_upload(
@@ -103,6 +107,20 @@ async def classify_image(
         # Save file (using content we already read)
         with open(file_path, "wb") as buffer:
             buffer.write(content)
+        
+        # Collect image metadata
+        from PIL import Image as PILImage
+        with PILImage.open(file_path) as img:
+            image_metadata = {
+                "filename": file.filename,
+                "size": file_size,
+                "format": img.format,
+                "dimensions": [img.width, img.height],
+                "width": img.width,
+                "height": img.height,
+                "has_transparency": img.mode in ('RGBA', 'LA') or 'transparency' in img.info
+            }
+        logger.info(f"Image metadata collected: {image_metadata}")
         
         # Process image
         logger.info("Processing image...")
@@ -204,6 +222,9 @@ async def classify_image(
         
         logger.debug("Creating response object...")
         try:
+            # Create ImageMetadata object
+            metadata_obj = ImageMetadata(**image_metadata)
+            
             response = ClassificationResponse(
                 id=file_id,
                 filename=file.filename,
@@ -212,7 +233,8 @@ async def classify_image(
                 processing_time=results["processing_time"],
                 model_used=results["model_used"],
                 timestamp=datetime.utcnow(),
-                image_url=f"/uploads/{filename}"
+                image_url=f"/uploads/{filename}",
+                image_metadata=metadata_obj
             )
             logger.info(f"Classification successful: {len(predictions_list)} predictions, processing time: {results['processing_time']:.2f}s")
             return response
@@ -234,7 +256,9 @@ async def classify_image(
 
 @router.post("/classify/batch", response_model=BatchClassificationResponse)
 async def classify_images_batch(
-    files: List[UploadFile] = File(..., description="Multiple image files to classify")
+    files: List[UploadFile] = File(..., description="Multiple image files to classify"),
+    current_user: Optional[User] = Depends(get_current_user_optional),
+    db: Session = Depends(get_db)
 ) -> BatchClassificationResponse:
     """
     Classify multiple uploaded images in batch.
@@ -245,6 +269,11 @@ async def classify_images_batch(
     Returns:
         Batch classification results
     """
+    print(f"\n=== BATCH CLASSIFICATION REQUEST ===")
+    print(f"Number of files received: {len(files)}")
+    for i, file in enumerate(files):
+        print(f"File {i+1}: {file.filename}")
+    
     if len(files) > 10:  # Limit batch size
         raise HTTPException(
             status_code=400,
@@ -257,17 +286,43 @@ async def classify_images_batch(
     
     for file in files:
         try:
+            print(f"Processing file: {file.filename}")
+            print(f"File content type: {file.content_type}")
+            print(f"File size: {file.size if hasattr(file, 'size') else 'unknown'}")
+            
+            # Reset file pointer to ensure file can be read
+            await file.seek(0)
+            
             # Classify each file individually
-            result = await classify_image(file)
+            result = await classify_image(file, current_user, db)
+            
+            print(f"=== RESULT FROM classify_image ===")
+            print(f"Result type: {type(result)}")
+            print(f"Result dict: {result.__dict__ if hasattr(result, '__dict__') else result}")
+            print(f"Result id: {getattr(result, 'id', 'N/A')}")
+            print(f"Result filename: {getattr(result, 'filename', 'N/A')}")
+            print(f"Result image_url: {getattr(result, 'image_url', 'N/A')}")
+            
             results.append(result)
+            print(f"Successfully processed {file.filename}, total results so far: {len(results)}")
         except HTTPException as e:
+            print(f"Error processing {file.filename}: {e.detail}")
             errors.append({
                 "filename": file.filename,
                 "error": e.detail,
                 "status_code": e.status_code
             })
+        except Exception as e:
+            print(f"Unexpected error processing {file.filename}: {str(e)}")
+            errors.append({
+                "filename": file.filename,
+                "error": f"Unexpected error: {str(e)}",
+                "status_code": 500
+            })
     
-    return BatchClassificationResponse(
+    print(f"Batch processing complete: {len(results)} successful, {len(errors)} errors")
+    
+    batch_response = BatchClassificationResponse(
         batch_id=batch_id,
         total_files=len(files),
         successful_classifications=len(results),
@@ -276,6 +331,9 @@ async def classify_images_batch(
         errors=errors,
         timestamp=datetime.utcnow()
     )
+    
+    print(f"Returning batch response with {len(batch_response.results)} results")
+    return batch_response
 
 @router.get("/models")
 async def list_available_models() -> Dict[str, Any]:

@@ -80,7 +80,7 @@
           <div class="flex-1 min-w-0 mr-3">
             <div class="flex items-center space-x-2">
               <span class="text-sm font-medium text-gray-900 dark:text-white truncate">
-                {{ prediction.class_name }}
+                {{ translateClassName(prediction.class_name) }}
               </span>
               <span
                 v-if="prediction.confidence >= 0.8"
@@ -166,6 +166,7 @@
 
 <script setup lang="ts">
 import { computed, ref } from 'vue'
+import { translateClassName } from '@/utils/labelTranslation'
 import type { ClassificationResult } from '@/types/api'
 
 interface Props {
@@ -201,8 +202,30 @@ const toggleShowAll = () => {
 }
 
 const getImagePreview = (): string => {
-  // This would typically return a proper image URL from the server
-  // For now, return a placeholder or handle based on your backend setup
+  console.log('[Image Debug] Result data:', {
+    image_url: props.result.image_url,
+    id: props.result.id,
+    filename: props.result.filename,
+    metadata_filename: props.result.image_metadata?.filename
+  })
+  
+  // Use the image_url from the result if available
+  if (props.result.image_url) {
+    const fullUrl = `${import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000'}${props.result.image_url}`
+    console.log('[Image Debug] Using image_url:', fullUrl)
+    return fullUrl
+  }
+  
+  // Fallback: try to construct URL from filename and id
+  if (props.result.id && props.result.image_metadata?.filename) {
+    const extension = props.result.image_metadata.filename.split('.').pop()?.toLowerCase() || 'jpg'
+    const constructedUrl = `${import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000'}/uploads/${props.result.id}.${extension}`
+    console.log('[Image Debug] Using constructed URL:', constructedUrl)
+    return constructedUrl
+  }
+  
+  // Last resort: placeholder
+  console.log('[Image Debug] Using placeholder image')
   return '/api/placeholder-image.jpg'
 }
 

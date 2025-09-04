@@ -169,6 +169,7 @@ import { ref, computed, onMounted, onUnmounted, watch } from 'vue'
 import { useClassificationStore } from '@/stores/classification'
 import { useErrorStore } from '@/stores/error'
 import { classificationApi } from '@/services/classificationApi'
+import { translateClassName } from '@/utils/labelTranslation'
 import ResultCard from './ResultCard.vue'
 import ResultModal from './ResultModal.vue'
 import type { ClassificationResult } from '@/types/api'
@@ -210,7 +211,7 @@ const uniqueClasses = computed(() => {
   const classes = new Set<string>()
   results.value.forEach(result => {
     result.predictions.forEach(pred => {
-      classes.add(pred.class_name)
+      classes.add(translateClassName(pred.class_name))
     })
   })
   return Array.from(classes)

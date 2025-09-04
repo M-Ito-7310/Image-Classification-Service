@@ -146,7 +146,7 @@
                       <div class="flex items-start justify-between mb-2">
                         <div class="flex-1 min-w-0">
                           <h4 class="text-base font-semibold text-gray-900 dark:text-white truncate">
-                            {{ prediction.class_name }}
+                            {{ translateClassName(prediction.class_name) }}
                           </h4>
                           <p class="text-sm text-gray-600 dark:text-gray-400">
                             クラスID: {{ prediction.class_id }}
@@ -244,6 +244,7 @@
 
 <script setup lang="ts">
 import { computed, ref } from 'vue'
+import { translateClassName } from '@/utils/labelTranslation'
 import type { ClassificationResult } from '@/types/api'
 
 interface Props {
@@ -268,7 +269,7 @@ const sortedPredictions = computed(() => {
   if (sortBy.value === 'confidence') {
     return predictions.sort((a, b) => b.confidence - a.confidence)
   } else {
-    return predictions.sort((a, b) => a.class_name.localeCompare(b.class_name))
+    return predictions.sort((a, b) => translateClassName(a.class_name).localeCompare(translateClassName(b.class_name)))
   }
 })
 
@@ -314,7 +315,19 @@ const handleBackdropClick = (e: MouseEvent) => {
 }
 
 const getImagePreview = (): string => {
-  // Return appropriate image URL
+  // Use the image_url from the result if available
+  if (props.result.image_url) {
+    // Construct full URL with API base
+    return `${import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000'}${props.result.image_url}`
+  }
+  
+  // Fallback: try to construct URL from filename and id
+  if (props.result.id && props.result.image_metadata?.filename) {
+    const extension = props.result.image_metadata.filename.split('.').pop()?.toLowerCase() || 'jpg'
+    return `${import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000'}/uploads/${props.result.id}.${extension}`
+  }
+  
+  // Last resort: placeholder
   return '/api/placeholder-image.jpg'
 }
 

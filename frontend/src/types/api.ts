@@ -20,12 +20,15 @@ export interface ClassificationPrediction {
 }
 
 export interface ClassificationResult {
+  id?: string
   predictions: ClassificationPrediction[]
   confidence_scores?: Record<string, number>
   processing_time: number
   model_used: string
   threshold_applied?: number
   image_metadata?: ImageMetadata
+  image_url?: string
+  filename?: string
 }
 
 export interface ImageMetadata {
@@ -109,6 +112,7 @@ export interface UploadOptions {
   threshold?: number
   max_results?: number
   enhance_image?: boolean
+  language?: 'ja' | 'en'
 }
 
 export interface UploadProgress {

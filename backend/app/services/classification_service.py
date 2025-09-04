@@ -120,8 +120,8 @@ class ClassificationService:
             )
             self.models['resnet50'] = resnet
             
-            # Load ImageNet class labels
-            self._load_imagenet_labels()
+            # Note: Using decode_predictions instead of custom labels
+            # self._load_imagenet_labels()  # Deprecated: use decode_predictions
             
         except Exception as e:
             print(f"Error loading TensorFlow models: {e}")
@@ -365,7 +365,7 @@ class ClassificationService:
         image: np.ndarray, 
         model_name: str
     ) -> Dict[str, Any]:
-        """Classify using TensorFlow models."""
+        """Classify using TensorFlow models with human-readable labels."""
         if not TENSORFLOW_AVAILABLE:
             print("TensorFlow not available, falling back to mock")
             return await self._classify_mock(image)
@@ -388,23 +388,20 @@ class ClassificationService:
             print(f"Raw prediction shape: {predictions.shape}")
             print(f"Raw prediction sample (first 10): {predictions[0][:10]}")
             
-            predictions = predictions[0]  # Remove batch dimension
+            # Use TensorFlow's decode_predictions for human-readable labels
+            from tensorflow.keras.applications.imagenet_utils import decode_predictions
             
-            # Get top predictions
-            top_indices = np.argsort(predictions)[-5:][::-1]
-            print(f"Top 5 indices: {top_indices}")
-            print(f"Top 5 confidences: {predictions[top_indices]}")
+            # decode_predictions expects the full predictions array with batch dimension
+            decoded_predictions = decode_predictions(predictions, top=5)[0]
+            print(f"Decoded predictions: {decoded_predictions}")
             
             results = []
-            for idx in top_indices:
-                class_name = self.imagenet_labels[idx] if idx < len(self.imagenet_labels) else f"class_{idx}"
-                confidence = float(predictions[idx])
-                
-                print(f"Adding result: {class_name} = {confidence}")
+            for class_id, class_name, confidence in decoded_predictions:
+                print(f"Adding result: {class_name} = {confidence:.4f} (ID: {class_id})")
                 results.append({
                     'class_name': class_name,
-                    'confidence': confidence,
-                    'class_id': str(idx)
+                    'confidence': float(confidence),
+                    'class_id': class_id
                 })
             
             print(f"TensorFlow results: {results}")

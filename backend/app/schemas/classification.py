@@ -16,6 +16,16 @@ class Prediction(BaseModel):
     confidence: float = Field(description="Confidence score (0.0 to 1.0)")
     class_id: Optional[str] = Field(default=None, description="Class identifier")
 
+class ImageMetadata(BaseModel):
+    """Image metadata model."""
+    filename: str = Field(description="Original filename")
+    size: int = Field(description="File size in bytes")
+    format: str = Field(description="Image format (JPEG, PNG, etc.)")
+    dimensions: List[int] = Field(description="Image dimensions [width, height]")
+    width: int = Field(description="Image width in pixels")
+    height: int = Field(description="Image height in pixels")
+    has_transparency: bool = Field(description="Whether image has transparency")
+
 class ClassificationResponse(BaseModel):
     """Response model for image classification."""
     model_config = {"protected_namespaces": ()}
@@ -28,6 +38,7 @@ class ClassificationResponse(BaseModel):
     model_used: str = Field(description="Model used for classification")
     timestamp: datetime = Field(description="Classification timestamp")
     image_url: Optional[str] = Field(default=None, description="URL to access the uploaded image")
+    image_metadata: Optional[ImageMetadata] = Field(default=None, description="Image metadata information")
 
 class BatchClassificationResponse(BaseModel):
     """Response model for batch image classification."""

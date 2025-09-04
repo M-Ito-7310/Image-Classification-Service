@@ -12,7 +12,7 @@ class ImageService:
     def __init__(self):
         # Standard image size for most models
         self.standard_size = (224, 224)
-        self.max_dimension = 2048  # Maximum dimension for safety
+        self.max_dimension = 4096  # Maximum dimension for safety (supports up to 4K images)
     
     async def process_image(
         self,
@@ -43,9 +43,21 @@ class ImageService:
                 if image.mode != 'RGB':
                     image = image.convert('RGB')
                 
-                # Basic validation
+                # Auto-resize large images instead of rejecting them
                 if image.size[0] > self.max_dimension or image.size[1] > self.max_dimension:
-                    raise ValueError(f"Image dimensions too large: {image.size}")
+                    print(f"Image dimensions {image.size} exceed maximum {self.max_dimension}, auto-resizing...")
+                    # Calculate new size maintaining aspect ratio
+                    width, height = image.size
+                    if width > height:
+                        new_width = self.max_dimension
+                        new_height = int((height * self.max_dimension) / width)
+                    else:
+                        new_height = self.max_dimension
+                        new_width = int((width * self.max_dimension) / height)
+                    
+                    # Resize with high quality
+                    image = image.resize((new_width, new_height), Image.Resampling.LANCZOS)
+                    print(f"Image resized to: {image.size}")
                 
                 # Resize if target size is specified
                 if target_size is None:

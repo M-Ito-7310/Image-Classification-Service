@@ -1,4 +1,5 @@
 import { apiService, dispatchApiError, dispatchLoading } from './api'
+import i18n from '@/i18n'
 import type {
   ClassificationResult,
   ModelsResponse,
@@ -70,6 +71,7 @@ class ClassificationApiService {
         threshold: options.threshold || 0.5,
         max_results: options.max_results || 5,
         enhance_image: options.enhance_image || false,
+        language: options.language || i18n.global.locale.value as 'ja' | 'en',
       }
 
       const response = await apiService.uploadFile<ClassificationResult>(
@@ -126,14 +128,23 @@ class ClassificationApiService {
         model: options.model || 'default',
         threshold: options.threshold || 0.5,
         max_results: options.max_results || 5,
+        language: options.language || i18n.global.locale.value as 'ja' | 'en',
       }
 
+      console.log(`=== BATCH API CALL ===`)
+      console.log(`Uploading ${files.length} files:`, files.map(f => f.name))
+      
       const response = await apiService.uploadFiles<{ results: ClassificationResult[] }>(
         '/api/v1/classify/batch',
         files,
         uploadOptions,
         onProgress
       )
+
+      console.log('=== BATCH API RESPONSE ===')
+      console.log('Full response:', response)
+      console.log('Results count:', response.results?.length || 0)
+      console.log('Results array:', response.results)
 
       window.dispatchEvent(new CustomEvent('app:toast', {
         detail: {
