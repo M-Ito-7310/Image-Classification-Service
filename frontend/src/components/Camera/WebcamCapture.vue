@@ -117,7 +117,7 @@
         <!-- Results Panel -->
         <div>
           <h3 class="text-lg font-medium text-gray-900 dark:text-white mb-4">
-            リアルタイム分類結果
+            {{ $t('classification.results.title') }}
           </h3>
           
           <!-- Classification in Progress -->
@@ -170,11 +170,11 @@
             <div class="mt-4 pt-4 border-t border-gray-200 dark:border-gray-700">
               <div class="grid grid-cols-2 gap-4 text-sm">
                 <div>
-                  <span class="text-gray-500">処理時間:</span>
+                  <span class="text-gray-500">{{ $t('classification.results.processingTime') }}:</span>
                   <span class="ml-1 text-gray-900 dark:text-white">{{ latestResult.processing_time }}ms</span>
                 </div>
                 <div>
-                  <span class="text-gray-500">使用モデル:</span>
+                  <span class="text-gray-500">{{ $t('classification.results.modelUsed') }}:</span>
                   <span class="ml-1 text-gray-900 dark:text-white">{{ latestResult.model_used }}</span>
                 </div>
               </div>

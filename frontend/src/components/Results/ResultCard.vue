@@ -40,7 +40,7 @@
       <!-- Prediction Count Badge -->
       <div class="absolute bottom-2 left-2">
         <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-primary-100 text-primary-800 dark:bg-primary-800 dark:text-primary-100">
-          {{ result.predictions.length }}個の予測
+          {{ t('classification.results.predictionsCount', { count: result.predictions.length }) }}
         </span>
       </div>
     </div>
@@ -66,7 +66,7 @@
           <div class="text-lg font-bold text-gray-900 dark:text-white">
             {{ (topPrediction?.confidence * 100).toFixed(1) }}%
           </div>
-          <div class="text-xs text-gray-600 dark:text-gray-400">最高信頼度</div>
+          <div class="text-xs text-gray-600 dark:text-gray-400">{{ t('classification.results.highestConfidence') }}</div>
         </div>
       </div>
 
@@ -86,7 +86,7 @@
                 v-if="prediction.confidence >= 0.8"
                 class="inline-flex items-center px-1.5 py-0.5 rounded text-xs font-medium bg-green-100 text-green-800 dark:bg-green-800 dark:text-green-100"
               >
-                高信頼度
+                {{ t('classification.results.highConfidence') }}
               </span>
             </div>
           </div>
@@ -113,8 +113,8 @@
           class="text-xs text-primary-600 dark:text-primary-400 hover:text-primary-700 dark:hover:text-primary-300 font-medium transition-colors"
         >
           {{ showAll 
-            ? `${result.predictions.length - maxVisiblePredictions}個を非表示`
-            : `あと${result.predictions.length - maxVisiblePredictions}個を表示`
+            ? t('classification.results.showLess', { count: result.predictions.length - maxVisiblePredictions })
+            : t('classification.results.showMore', { count: result.predictions.length - maxVisiblePredictions })
           }}
         </button>
       </div>
@@ -126,15 +126,15 @@
       >
         <div class="grid grid-cols-3 gap-4 text-xs text-gray-600 dark:text-gray-400">
           <div>
-            <span class="font-medium">サイズ:</span>
+            <span class="font-medium">{{ t('classification.results.size') }}:</span>
             {{ formatFileSize(result.image_metadata.size) }}
           </div>
           <div>
-            <span class="font-medium">形式:</span>
+            <span class="font-medium">{{ t('classification.results.format') }}:</span>
             {{ result.image_metadata.format.toUpperCase() }}
           </div>
           <div>
-            <span class="font-medium">閾値:</span>
+            <span class="font-medium">{{ t('classification.results.threshold') }}:</span>
             {{ (result.threshold_applied || 0.5).toFixed(2) }}
           </div>
         </div>
@@ -149,7 +149,7 @@
           @click.stop="$emit('view-details', result)"
           class="flex-1 px-3 py-2 text-xs font-medium text-primary-600 dark:text-primary-400 bg-primary-50 dark:bg-primary-900/20 rounded-md hover:bg-primary-100 dark:hover:bg-primary-900/40 transition-colors"
         >
-          詳細を表示
+          {{ t('classification.results.viewDetails') }}
         </button>
         <button
           @click.stop="downloadResult"
@@ -166,6 +166,7 @@
 
 <script setup lang="ts">
 import { computed, ref } from 'vue'
+import { useI18n } from 'vue-i18n'
 import { translateClassName } from '@/utils/labelTranslation'
 import type { ClassificationResult } from '@/types/api'
 
@@ -181,6 +182,11 @@ interface Emits {
 
 const props = defineProps<Props>()
 const emits = defineEmits<Emits>()
+
+// Composables
+const { t } = useI18n()
+
+// i18n is now working correctly
 
 // Local state
 const showAll = ref(false)
@@ -202,17 +208,9 @@ const toggleShowAll = () => {
 }
 
 const getImagePreview = (): string => {
-  console.log('[Image Debug] Result data:', {
-    image_url: props.result.image_url,
-    id: props.result.id,
-    filename: props.result.filename,
-    metadata_filename: props.result.image_metadata?.filename
-  })
-  
   // Use the image_url from the result if available
   if (props.result.image_url) {
     const fullUrl = `${import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000'}${props.result.image_url}`
-    console.log('[Image Debug] Using image_url:', fullUrl)
     return fullUrl
   }
   
@@ -220,12 +218,10 @@ const getImagePreview = (): string => {
   if (props.result.id && props.result.image_metadata?.filename) {
     const extension = props.result.image_metadata.filename.split('.').pop()?.toLowerCase() || 'jpg'
     const constructedUrl = `${import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000'}/uploads/${props.result.id}.${extension}`
-    console.log('[Image Debug] Using constructed URL:', constructedUrl)
     return constructedUrl
   }
   
   // Last resort: placeholder
-  console.log('[Image Debug] Using placeholder image')
   return '/api/placeholder-image.jpg'
 }
 
@@ -285,8 +281,8 @@ const downloadResult = async () => {
     window.dispatchEvent(new CustomEvent('app:toast', {
       detail: {
         type: 'success',
-        title: 'ダウンロード完了',
-        message: '分類結果をダウンロードしました'
+        title: t('classification.results.downloadCompleted'),
+        message: t('classification.results.downloadMessage')
       }
     }))
     
@@ -295,8 +291,8 @@ const downloadResult = async () => {
     window.dispatchEvent(new CustomEvent('app:toast', {
       detail: {
         type: 'error',
-        title: 'ダウンロードエラー',
-        message: 'ファイルのダウンロードに失敗しました'
+        title: t('classification.results.downloadError'),
+        message: t('classification.results.downloadErrorMessage')
       }
     }))
   }

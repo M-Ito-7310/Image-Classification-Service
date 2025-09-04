@@ -286,23 +286,11 @@ async def classify_images_batch(
     
     for file in files:
         try:
-            print(f"Processing file: {file.filename}")
-            print(f"File content type: {file.content_type}")
-            print(f"File size: {file.size if hasattr(file, 'size') else 'unknown'}")
-            
             # Reset file pointer to ensure file can be read
             await file.seek(0)
             
             # Classify each file individually
             result = await classify_image(file, current_user, db)
-            
-            print(f"=== RESULT FROM classify_image ===")
-            print(f"Result type: {type(result)}")
-            print(f"Result dict: {result.__dict__ if hasattr(result, '__dict__') else result}")
-            print(f"Result id: {getattr(result, 'id', 'N/A')}")
-            print(f"Result filename: {getattr(result, 'filename', 'N/A')}")
-            print(f"Result image_url: {getattr(result, 'image_url', 'N/A')}")
-            
             results.append(result)
             print(f"Successfully processed {file.filename}, total results so far: {len(results)}")
         except HTTPException as e:

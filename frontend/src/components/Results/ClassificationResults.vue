@@ -4,10 +4,10 @@
     <div class="flex items-center justify-between">
       <div>
         <h2 class="text-2xl font-bold text-gray-900 dark:text-white">
-          分類結果
+          {{ t('classification.results.title') }}
         </h2>
         <p class="text-gray-600 dark:text-gray-400 mt-1">
-          {{ results.length }}個の画像を分析 • {{ totalPredictions }}個の予測
+          {{ t('classification.results.imagesAnalyzed', { count: results.length }) }} • {{ t('classification.results.totalPredictions', { count: totalPredictions }) }}
         </p>
       </div>
       
@@ -49,7 +49,7 @@
             <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
             </svg>
-            エクスポート
+            {{ t('classification.results.export') }}
           </button>
           
           <!-- Export Menu -->
@@ -71,13 +71,13 @@
                   @click="exportResults('json')"
                   class="block w-full px-4 py-2 text-left text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
                 >
-                  JSON形式でエクスポート
+                  {{ t('classification.results.exportJson') }}
                 </button>
                 <button
                   @click="exportResults('csv')"
                   class="block w-full px-4 py-2 text-left text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
                 >
-                  CSV形式でエクスポート
+                  {{ t('classification.results.exportCsv') }}
                 </button>
               </div>
             </div>
@@ -89,7 +89,7 @@
           @click="clearResults"
           class="btn btn-outline text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20"
         >
-          結果をクリア
+          {{ t('classification.results.clearResults') }}
         </button>
       </div>
     </div>
@@ -101,25 +101,25 @@
           <div class="text-2xl font-bold text-gray-900 dark:text-white">
             {{ averageConfidence.toFixed(1) }}%
           </div>
-          <div class="text-sm text-gray-600 dark:text-gray-400">平均信頼度</div>
+          <div class="text-sm text-gray-600 dark:text-gray-400">{{ t('classification.results.averageConfidence') }}</div>
         </div>
         <div>
           <div class="text-2xl font-bold text-gray-900 dark:text-white">
             {{ averageProcessingTime.toFixed(0) }}ms
           </div>
-          <div class="text-sm text-gray-600 dark:text-gray-400">平均処理時間</div>
+          <div class="text-sm text-gray-600 dark:text-gray-400">{{ t('classification.results.averageProcessingTime') }}</div>
         </div>
         <div>
           <div class="text-2xl font-bold text-gray-900 dark:text-white">
             {{ uniqueClasses.length }}
           </div>
-          <div class="text-sm text-gray-600 dark:text-gray-400">検出クラス数</div>
+          <div class="text-sm text-gray-600 dark:text-gray-400">{{ t('classification.results.detectedClasses') }}</div>
         </div>
         <div>
           <div class="text-2xl font-bold text-gray-900 dark:text-white">
             {{ highConfidenceCount }}
           </div>
-          <div class="text-sm text-gray-600 dark:text-gray-400">高信頼度結果</div>
+          <div class="text-sm text-gray-600 dark:text-gray-400">{{ t('classification.results.highConfidenceResults') }}</div>
         </div>
       </div>
     </div>
@@ -166,6 +166,7 @@
 
 <script setup lang="ts">
 import { ref, computed, onMounted, onUnmounted, watch } from 'vue'
+import { useI18n } from 'vue-i18n'
 import { useClassificationStore } from '@/stores/classification'
 import { useErrorStore } from '@/stores/error'
 import { classificationApi } from '@/services/classificationApi'
@@ -173,6 +174,9 @@ import { translateClassName } from '@/utils/labelTranslation'
 import ResultCard from './ResultCard.vue'
 import ResultModal from './ResultModal.vue'
 import type { ClassificationResult } from '@/types/api'
+
+// Composables
+const { t } = useI18n()
 
 // Stores
 const classificationStore = useClassificationStore()
@@ -230,8 +234,8 @@ const clearResults = () => {
   window.dispatchEvent(new CustomEvent('app:toast', {
     detail: {
       type: 'info',
-      title: '結果をクリア',
-      message: '分類結果をクリアしました'
+      title: t('classification.results.clearResults'),
+      message: t('classification.results.resultsCleared')
     }
   }))
 }
@@ -255,8 +259,8 @@ const exportResults = async (format: 'json' | 'csv') => {
     window.dispatchEvent(new CustomEvent('app:toast', {
       detail: {
         type: 'success',
-        title: 'エクスポート完了',
-        message: `${format.toUpperCase()}形式でエクスポートしました`
+        title: t('classification.results.exportCompleted'),
+        message: t('classification.results.exportedFormat', { format: format.toUpperCase() })
       }
     }))
     

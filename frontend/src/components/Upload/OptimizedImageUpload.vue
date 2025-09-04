@@ -33,7 +33,7 @@
               type="checkbox"
               class="rounded border-gray-300 dark:border-gray-600"
             >
-            <span class="text-sm text-gray-600 dark:text-gray-400">リサイズを有効化</span>
+            <span class="text-sm text-gray-600 dark:text-gray-400">{{ $t('classification.upload.enableResize') }}</span>
           </div>
         </div>
         
@@ -74,7 +74,7 @@
             画像をドラッグ&ドロップまたはクリックして選択
           </p>
           <p class="text-sm text-gray-500 dark:text-gray-500 mb-4">
-            対応形式: JPEG, PNG, WebP, BMP • 最適化により高速処理
+            {{ $t('classification.upload.supportedFormatsOptimized') }}
           </p>
           <input
             ref="fileInput"

@@ -28,7 +28,7 @@
             {{ t('classification.batch.selectFiles') }}
           </p>
           <p class="text-sm text-gray-500 dark:text-gray-500 mb-4">
-            対応形式: JPEG, PNG, WebP, BMP • 最大10MB/ファイル
+            {{ $t('classification.upload.supportedFormatsWithSize') }}
           </p>
           <input
             ref="fileInput"
@@ -114,7 +114,7 @@
           <div class="mt-4 pt-4 border-t border-gray-200 dark:border-gray-700">
             <div class="flex justify-between items-center">
               <div class="text-sm text-gray-600 dark:text-gray-400">
-                総サイズ: {{ formatFileSize(totalSize) }}
+                {{ $t('classification.upload.totalSize') }}: {{ formatFileSize(totalSize) }}
               </div>
               <button
                 @click="$refs.fileInput.click()"
@@ -136,7 +136,7 @@
         <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
           <div>
             <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-              使用モデル
+              {{ $t('classification.upload.modelLabel') }}
             </label>
             <select
               v-model="options.model"

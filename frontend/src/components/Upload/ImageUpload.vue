@@ -336,7 +336,7 @@ const addFiles = (fileList: FileList) => {
   
   if (result.invalid > 0) {
     errorStore.handleFileError(
-      `${result.invalid}個のファイルは対応していない形式または大きすぎるため追加されませんでした`
+      t('classification.upload.unsupportedFilesError', { count: result.invalid })
     )
   }
   

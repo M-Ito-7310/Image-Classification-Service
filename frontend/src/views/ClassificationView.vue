@@ -143,26 +143,6 @@ const hasResults = computed(() => classificationStore.hasResults)
 
 // Methods
 const handleUploadComplete = (results: ClassificationResult[]) => {
-  console.log('=== UPLOAD COMPLETE ===')
-  console.log('Total results received:', results?.length || 0)
-  console.log('Full results array:', results)
-  
-  if (results && results.length > 0) {
-    results.forEach((result, index) => {
-      console.log(`--- Result ${index + 1} ---`)
-      console.log('  - FULL RESULT OBJECT:', result)
-      console.log('  - filename:', result.filename || result.image_metadata?.filename || 'N/A')
-      console.log('  - id:', result.id || 'N/A')
-      console.log('  - image_url:', result.image_url || 'N/A')
-      console.log('  - image_metadata:', result.image_metadata || 'N/A')
-      console.log('  - predictions count:', result.predictions?.length || 0)
-      console.log('  - top prediction:', result.predictions?.[0]?.class_name || 'N/A')
-      console.log('  - confidence_scores keys:', Object.keys(result.confidence_scores || {}))
-      console.log('  - model_used:', result.model_used)
-      console.log('  - processing_time:', result.processing_time)
-    })
-  } else {
-    console.log('No results received!')
-  }
+  // Results are handled by the classification store
 }
 </script>

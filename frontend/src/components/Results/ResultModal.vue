@@ -19,7 +19,7 @@
                 {{ result.image_metadata?.filename || 'Classification Result' }}
               </h2>
               <p class="text-sm text-gray-600 dark:text-gray-400 mt-1">
-                {{ result.model_used }} • {{ result.processing_time.toFixed(0) }}ms • {{ result.predictions.length }}個の予測
+                {{ result.model_used }} • {{ result.processing_time.toFixed(0) }}ms • {{ t('classification.results.predictionsCount', { count: result.predictions.length }) }}
               </p>
             </div>
             
@@ -70,33 +70,33 @@
                   <!-- Image Metadata -->
                   <div v-if="result.image_metadata" class="glass rounded-lg p-4">
                     <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-3">
-                      画像情報
+                      {{ t('classification.results.imageInfo') }}
                     </h3>
                     
                     <dl class="grid grid-cols-2 gap-3 text-sm">
                       <div>
-                        <dt class="font-medium text-gray-600 dark:text-gray-400">ファイル名</dt>
+                        <dt class="font-medium text-gray-600 dark:text-gray-400">{{ t('classification.results.filename') }}</dt>
                         <dd class="text-gray-900 dark:text-white truncate" :title="result.image_metadata.filename">
                           {{ result.image_metadata.filename }}
                         </dd>
                       </div>
                       
                       <div>
-                        <dt class="font-medium text-gray-600 dark:text-gray-400">サイズ</dt>
+                        <dt class="font-medium text-gray-600 dark:text-gray-400">{{ t('classification.results.size') }}</dt>
                         <dd class="text-gray-900 dark:text-white">
                           {{ formatFileSize(result.image_metadata.size) }}
                         </dd>
                       </div>
                       
                       <div>
-                        <dt class="font-medium text-gray-600 dark:text-gray-400">形式</dt>
+                        <dt class="font-medium text-gray-600 dark:text-gray-400">{{ t('classification.results.format') }}</dt>
                         <dd class="text-gray-900 dark:text-white">
                           {{ result.image_metadata.format.toUpperCase() }}
                         </dd>
                       </div>
                       
                       <div>
-                        <dt class="font-medium text-gray-600 dark:text-gray-400">解像度</dt>
+                        <dt class="font-medium text-gray-600 dark:text-gray-400">{{ t('classification.results.resolution') }}</dt>
                         <dd class="text-gray-900 dark:text-white">
                           {{ result.image_metadata.dimensions[0] }}×{{ result.image_metadata.dimensions[1] }}
                         </dd>
@@ -110,7 +110,7 @@
                       </div>
                       
                       <div>
-                        <dt class="font-medium text-gray-600 dark:text-gray-400">使用モデル</dt>
+                        <dt class="font-medium text-gray-600 dark:text-gray-400">{{ t('classification.results.modelUsed') }}</dt>
                         <dd class="text-gray-900 dark:text-white">
                           {{ result.model_used }}
                         </dd>
@@ -123,7 +123,7 @@
                 <div class="space-y-4">
                   <div class="flex items-center justify-between">
                     <h3 class="text-lg font-semibold text-gray-900 dark:text-white">
-                      分類結果 ({{ result.predictions.length }})
+                      {{ t('classification.results.classificationResults') }} ({{ result.predictions.length }})
                     </h3>
                     
                     <!-- Sort Options -->
@@ -131,8 +131,8 @@
                       v-model="sortBy"
                       class="text-sm border border-gray-300 dark:border-gray-600 rounded-md px-2 py-1 bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
                     >
-                      <option value="confidence">信頼度順</option>
-                      <option value="name">クラス名順</option>
+                      <option value="confidence">{{ t('classification.results.sortByConfidence') }}</option>
+                      <option value="name">{{ t('classification.results.sortByName') }}</option>
                     </select>
                   </div>
 
@@ -180,7 +180,7 @@
                   <!-- Confidence Distribution Chart -->
                   <div class="glass rounded-lg p-4">
                     <h4 class="text-base font-semibold text-gray-900 dark:text-white mb-3">
-                      信頼度分布
+                      {{ t('classification.results.confidenceDistribution') }}
                     </h4>
                     
                     <div class="space-y-2">
@@ -214,8 +214,8 @@
           <!-- Footer -->
           <div class="flex items-center justify-between p-6 border-t border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800/50">
             <div class="text-sm text-gray-600 dark:text-gray-400">
-              最高信頼度: {{ (maxConfidence * 100).toFixed(2) }}% • 
-              平均信頼度: {{ (avgConfidence * 100).toFixed(2) }}%
+              {{ t('classification.results.highestConfidence') }}: {{ (maxConfidence * 100).toFixed(2) }}% • 
+              {{ t('classification.results.averageConfidence') }}: {{ (avgConfidence * 100).toFixed(2) }}%
             </div>
             
             <div class="flex items-center space-x-3">
@@ -226,13 +226,13 @@
                 <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                 </svg>
-                ダウンロード
+                {{ t('classification.results.download') }}
               </button>
               <button
                 @click="$emit('close')"
                 class="btn btn-primary"
               >
-                閉じる
+                {{ t('common.close') }}
               </button>
             </div>
           </div>
@@ -244,6 +244,7 @@
 
 <script setup lang="ts">
 import { computed, ref } from 'vue'
+import { useI18n } from 'vue-i18n'
 import { translateClassName } from '@/utils/labelTranslation'
 import type { ClassificationResult } from '@/types/api'
 
@@ -258,6 +259,9 @@ interface Emits {
 
 const props = defineProps<Props>()
 const emits = defineEmits<Emits>()
+
+// Composables
+const { t } = useI18n()
 
 // Local state
 const sortBy = ref<'confidence' | 'name'>('confidence')
@@ -337,11 +341,11 @@ const handleImageError = (e: Event) => {
 }
 
 const getConfidenceLabel = (confidence: number): string => {
-  if (confidence >= 0.9) return '非常に高い'
-  if (confidence >= 0.8) return '高い'
-  if (confidence >= 0.6) return '中程度'
-  if (confidence >= 0.4) return '低い'
-  return '非常に低い'
+  if (confidence >= 0.9) return t('classification.results.confidenceLevel.veryHigh')
+  if (confidence >= 0.8) return t('classification.results.confidenceLevel.high')
+  if (confidence >= 0.6) return t('classification.results.confidenceLevel.medium')
+  if (confidence >= 0.4) return t('classification.results.confidenceLevel.low')
+  return t('classification.results.confidenceLevel.veryLow')
 }
 
 const getConfidenceBadgeClass = (confidence: number): string => {
@@ -402,8 +406,8 @@ const downloadResult = async () => {
     window.dispatchEvent(new CustomEvent('app:toast', {
       detail: {
         type: 'success',
-        title: 'ダウンロード完了',
-        message: '詳細結果をダウンロードしました'
+        title: t('classification.results.downloadCompleted'),
+        message: t('classification.results.downloadMessage')
       }
     }))
     
